@@ -36,7 +36,6 @@
 
 #include <string.h>
 #include <registryFunction.h>
-#include <aSubRecord.h>
 
 #include <epicsExport.h>
 
