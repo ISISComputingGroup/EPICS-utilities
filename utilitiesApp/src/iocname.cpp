@@ -65,12 +65,12 @@ epicsShareFunc std::string epicsShareAPI setIOCName(const char* iocName)
 	{
 		ioc_name = iocBootDir_s;
 	}
-	// strip off -IOC-01 trailer to get IOC group, and remove -IOC- to get ioc name
+	// strip off -IOC-01 trailer to get IOC group, and remove -IOC from -IOC- to get ioc name (we want YY-IOC-01 to beceom YY_01
 	size_t pos = ioc_name.find("_IOC_");
 	if (pos != std::string::npos)
 	{
 	    ioc_group = ioc_name.substr(0, pos); 
-		ioc_name.erase(pos, strlen("_IOC_"));
+		ioc_name.erase(pos, strlen("_IOC")); // not _IOC_ as we want to leave an _ before the number
 	}
 	else if ( (pos = ioc_name.rfind("_")) != std::string::npos )   // old style nameing e.g. DEVICE32_01
 	{
