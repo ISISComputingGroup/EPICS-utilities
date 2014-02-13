@@ -51,7 +51,8 @@
 // options
 // default: perform calc and return integer in resultVar
 // 0x1: verbose
-static void ioccalc(const char* resultvar, const char* expression, int options)
+// 0x2: zero pad to specified length
+static void ioccalc(const char* resultvar, const char* expression, int options, int length)
 {
     if (resultvar == NULL || expression == NULL)
 	{
@@ -59,6 +60,7 @@ static void ioccalc(const char* resultvar, const char* expression, int options)
 		return;
 	}
 	bool verbose = (options & 0x1);
+	bool zero_pad = (options & 0x2);
     char* expr_expand = macEnvExpand(expression);
 	if (expr_expand == NULL)
 	{
@@ -90,10 +92,26 @@ static void ioccalc(const char* resultvar, const char* expression, int options)
 		return;
 	}
 	char result_str[32];
-	cvtLongToString(static_cast<epicsInt32>(floor(result + 0.5)), result_str);
+	std::ostringstream format_str;
+	format_str << "%";
+	if (zero_pad)
+	{
+	    format_str << "0";
+	}
+	if (length > 0)
+	{
+	    format_str << length;
+	}
+	format_str << "ld";
+	if (sprintf(result_str, format_str.str().c_str(), static_cast<long>(floor(result + 0.5))) < 0)
+	{
+	    errlogPrintf("ioccalc: ERROR: sprintf: %s\n", format_str.str().c_str());
+		return;
+	}
 	if (verbose)
 	{
 	    printf("ioccalc: setting %s=\"%s\" (%g)\n", resultvar, result_str, result);
+        // print out parg array too for info? (values assigned to A, B, C parameters in exporession) 		
 	}
 	epicsEnvSet(resultvar, result_str);
 	free(expr_expand);
@@ -107,13 +125,14 @@ extern "C" {
 static const iocshArg calcInitArg0 = { "resultvar", iocshArgString };
 static const iocshArg calcInitArg1 = { "expression", iocshArgString };
 static const iocshArg calcInitArg2 = { "options", iocshArgInt };
-static const iocshArg * const calcInitArgs[] = { &calcInitArg0, &calcInitArg1, &calcInitArg2 };
+static const iocshArg calcInitArg3 = { "length", iocshArgInt };
+static const iocshArg * const calcInitArgs[] = { &calcInitArg0, &calcInitArg1, &calcInitArg2, &calcInitArg3 };
 
 static const iocshFuncDef calcInitFuncDef = {"calc", sizeof(calcInitArgs) / sizeof(iocshArg*), calcInitArgs};
 
 static void calcInitCallFunc(const iocshArgBuf *args)
 {
-    ioccalc(args[0].sval, args[1].sval, args[2].ival);
+    ioccalc(args[0].sval, args[1].sval, args[2].ival, args[3].ival);
 }
 
 static void ioccalcRegister(void)
