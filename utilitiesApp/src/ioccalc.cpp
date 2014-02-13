@@ -14,6 +14,7 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
+#include <memory>
 
 #include "epicsStdlib.h"
 #include "epicsString.h"
