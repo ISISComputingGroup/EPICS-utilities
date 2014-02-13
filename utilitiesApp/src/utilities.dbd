@@ -1,3 +1,2 @@
-function(getIOCName)
-function(getIOCGroup)
-function(trimString)
+registrar(ioccalcRegister)
+registrar(iocnameRegister)

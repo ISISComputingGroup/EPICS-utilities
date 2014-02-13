@@ -149,13 +149,13 @@ static void iocnameRegister(void)
     iocshRegister(&groupInitFuncDef, groupInitCallFunc);
 }
 
-epicsExportRegistrar(iocnameRegister);
+epicsExportRegistrar(iocnameRegister); // need to be declared via registrar() in utilities.dbd too
 
-// callable functions
+// asub callable functions - need to be in utilities.dbd as function() 
 
-epicsRegisterFunction(setIOCName); 
-epicsRegisterFunction(getIOCName); 
-epicsRegisterFunction(getIOCGroup); 
+//epicsRegisterFunction(setIOCName); 
+//epicsRegisterFunction(getIOCName); 
+//epicsRegisterFunction(getIOCGroup); 
 
 }
 
