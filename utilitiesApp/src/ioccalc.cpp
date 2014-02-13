@@ -52,6 +52,7 @@
 // default: perform calc and return integer in resultVar
 // 0x1: verbose
 // 0x2: zero pad to specified length
+// 0x4: if true ( !=0 ) then return ' ', if false ( ==0 ) return '#'
 static void ioccalc(const char* resultvar, const char* expression, int options, int length)
 {
     if (resultvar == NULL || expression == NULL)
@@ -61,6 +62,7 @@ static void ioccalc(const char* resultvar, const char* expression, int options, 
 	}
 	bool verbose = (options & 0x1);
 	bool zero_pad = (options & 0x2);
+	bool hash_mode = (options & 0x4);
     char* expr_expand = macEnvExpand(expression);
 	if (expr_expand == NULL)
 	{
@@ -81,32 +83,44 @@ static void ioccalc(const char* resultvar, const char* expression, int options, 
 	double result;
 	// need at add extra space to INFIX_TO_POSTFIX_SIZE - bug?
 	boost::scoped_array<char> ppostfix(new char[INFIX_TO_POSTFIX_SIZE(strlen(expr_expand)) + 100]);   // cannot use  std::unique_ptr<char[]>  yet
-	if (postfix(expr_expand, ppostfix.get(), &calc_error) != 0)
+	if ( postfix(expr_expand, ppostfix.get(), &calc_error) != 0 )
 	{
 	    errlogPrintf("ioccalc: ERROR: postfix: %s\n", calcErrorStr(calc_error));
 		return;
 	}
-	if (calcPerform(&(parg[0]), &result, ppostfix.get()) != 0)
+	if ( calcPerform(&(parg[0]), &result, ppostfix.get()) != 0 )
 	{
 	    errlogPrintf("ioccalc: ERROR: calcPerform: %s\n", "");
 		return;
 	}
+	long long_result = static_cast<long>(floor(result + 0.5));
 	char result_str[32];
 	std::ostringstream format_str;
-	format_str << "%";
-	if (zero_pad)
+	if (hash_mode)
 	{
-	    format_str << "0";
+		if ( sprintf(result_str, "%s", (long_result != 0 ? " " : "#")) < 0 )
+		{
+			errlogPrintf("ioccalc: ERROR: sprintf (hash mode)\n");
+			return;
+		}
 	}
-	if (length > 0)
+	else
 	{
-	    format_str << length;
-	}
-	format_str << "ld";
-	if (sprintf(result_str, format_str.str().c_str(), static_cast<long>(floor(result + 0.5))) < 0)
-	{
-	    errlogPrintf("ioccalc: ERROR: sprintf: %s\n", format_str.str().c_str());
-		return;
+		format_str << "%";
+		if (zero_pad)
+		{
+			format_str << "0";
+		}
+		if (length > 0)
+		{
+			format_str << length;
+		}
+		format_str << "ld";
+		if ( sprintf(result_str, format_str.str().c_str(), long_result) < 0 )
+		{
+			errlogPrintf("ioccalc: ERROR: sprintf: %s\n", format_str.str().c_str());
+			return;
+		}
 	}
 	if (verbose)
 	{
