@@ -39,6 +39,8 @@
 #include "postfix.h"
 #include "cvtFast.h"
 
+#include <boost/scoped_array.hpp>
+
 #include <string.h>
 #include <registryFunction.h>
 
@@ -76,7 +78,7 @@ static void ioccalc(const char* resultvar, const char* expression, int options)
 	}
 	double result;
 	// need at add extra space to INFIX_TO_POSTFIX_SIZE - bug?
-	std::unique_ptr<char[]> ppostfix(new char[INFIX_TO_POSTFIX_SIZE(strlen(expr_expand)) + 100]);
+	boost::scoped_array<char> ppostfix(new char[INFIX_TO_POSTFIX_SIZE(strlen(expr_expand)) + 100]);   // cannot use  std::unique_ptr<char[]>  yet
 	if (postfix(expr_expand, ppostfix.get(), &calc_error) != 0)
 	{
 	    errlogPrintf("ioccalc: ERROR: postfix: %s\n", calcErrorStr(calc_error));

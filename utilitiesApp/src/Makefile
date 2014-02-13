@@ -8,6 +8,8 @@ include $(TOP)/configure/CONFIG
 #==================================================
 # build a support library
 
+USR_INCLUDES += -I"$(TOP)/../../libraries/boost/include"
+
 LIBRARY_IOC += utilities
 
 # xxxRecord.h will be created from xxxRecord.dbd
