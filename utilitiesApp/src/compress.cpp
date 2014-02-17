@@ -13,12 +13,12 @@
 
 #include "utilities.h"
 
-// compress a string and then convert compressed bytes into an ascii hex sequence
-// suitable for transmission via an epics char waveform
+/// compress a string usinf zlib and then convert compressed bytes into an ascii hex sequence
+/// suitable for transmission via an EPICS character waveform record
 epicsShareFunc int epicsShareAPI compressString(const std::string& str, std::string& comp_str)
 {
         uLong len = str.size() + 1; // include terminating NULL
-        uLong comprLen = compressBound(len);
+        uLong comprLen = compressBound(len); // we should not need more bytes than this
         boost::scoped_array<Byte> compr(new Byte[comprLen]);
 		comp_str.resize(0);
         int err = compress(compr.get(), &comprLen, (const Bytef*)str.c_str(), len);
@@ -37,6 +37,7 @@ epicsShareFunc int epicsShareAPI compressString(const std::string& str, std::str
 		return 0;
 }
 
+/// uncompress a string created using compressString()
 epicsShareFunc int epicsShareAPI uncompressString(const std::string& comp_str, std::string& str)
 {
 	int length = str.length();
@@ -51,7 +52,7 @@ epicsShareFunc int epicsShareAPI uncompressString(const std::string& comp_str, s
 	{
 		compr.push_back(static_cast<Byte>(strtol(comp_str.substr(i,2).c_str(), NULL, 16)));
 	}
-	uLong uncomprLen = std::max(length * 10, 65536);
+	uLong uncomprLen = std::max(length * 10, 65536); // we have to guess a maximum for this
 	boost::scoped_array<Byte> uncompr(new Byte[uncomprLen]);
 	int err = uncompress(uncompr.get(), &uncomprLen, &(compr[0]), compr.size()); 
 	if (err != Z_OK)

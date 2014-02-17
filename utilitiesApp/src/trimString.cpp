@@ -33,8 +33,8 @@ epicsShareFunc std::string epicsShareAPI trimString(const std::string& str)
 	return s;
 }
 
-extern "C"
-{
-    epicsRegisterFunction(trimString); // needs to be in utilities.dbd as well
-}
+//extern "C"
+//{
+//    epicsRegisterFunction(trimString); // needs to be in utilities.dbd as well
+//}
 
