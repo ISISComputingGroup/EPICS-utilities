@@ -28,10 +28,9 @@ epicsShareFunc int epicsShareAPI compressString(const std::string& str, std::str
 			return -1;
 		}
         std::ostringstream oss;
-		oss << std::hex << std::setfill('0') << std::setw(2);
         for(int i=0; i<comprLen; ++i)
         {
-            oss << static_cast<unsigned>(compr[i]);
+            oss << std::hex << std::setfill ('0') << std::setw (2) << static_cast<unsigned>(compr[i]);
         }
         comp_str = oss.str();
 		return 0;
