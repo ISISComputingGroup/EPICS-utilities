@@ -19,7 +19,7 @@ DBD += utilities.dbd
 INC += utilities.h
 
 # specify all source files to be compiled and added to the library
-utilities_SRCS += iocname.cpp trimString.cpp ioccalc.cpp compress.cpp
+utilities_SRCS += iocname.cpp trimString.cpp ioccalc.cpp compress.cpp mkdir.cpp
 
 utilities_LIBS += zlib
 utilities_LIBS += $(EPICS_BASE_IOC_LIBS)
