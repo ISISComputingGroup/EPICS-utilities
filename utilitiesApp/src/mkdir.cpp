@@ -39,6 +39,10 @@
 #ifdef _WIN32
 #include <direct.h>
 #include <io.h>
+#else
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #endif /* _WIN32 */
 
 #include <string.h>
