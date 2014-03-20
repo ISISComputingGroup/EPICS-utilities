@@ -17,7 +17,7 @@
 /// suitable for transmission via an EPICS character waveform record
 epicsShareFunc int epicsShareAPI compressString(const std::string& str, std::string& comp_str)
 {
-        uLong len = str.size() + 1; // include terminating NULL
+        uLong len = str.size(); // not including terminating NULL
         uLong comprLen = compressBound(len); // we should not need more bytes than this
         boost::scoped_array<Byte> compr(new Byte[comprLen]);
 		comp_str.resize(0);
@@ -40,7 +40,6 @@ epicsShareFunc int epicsShareAPI compressString(const std::string& str, std::str
 epicsShareFunc int epicsShareAPI uncompressString(const std::string& comp_str, std::string& str)
 {
 	int length = comp_str.length();
-
 	str.resize(0);
 	if (length % 2 != 0) // strings created by compressString() are always an even number of bytes
 	{
@@ -62,7 +61,7 @@ epicsShareFunc int epicsShareAPI uncompressString(const std::string& comp_str, s
 		return -1;
 	}
 	str.reserve(uncomprLen);
-	for(int i=0; (i < uncomprLen) && (uncompr[i] != '\0'); ++i)
+	for(int i=0; (i < uncomprLen); ++i)
 	{
 		str.push_back(static_cast<char>(uncompr[i]));
 	}
