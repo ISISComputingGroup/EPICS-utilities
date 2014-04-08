@@ -1,3 +1,4 @@
 registrar(ioccalcRegister)
+registrar(iocstringtestRegister)
 registrar(iocnameRegister)
 registrar(mkdirRegister)
