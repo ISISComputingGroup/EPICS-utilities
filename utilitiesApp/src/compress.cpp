@@ -5,6 +5,7 @@
 #include <sstream>
 #include <iomanip>
 #include <vector>
+#include <algorithm>
 #include "zlib.h"
 
 #include <boost/scoped_array.hpp>
