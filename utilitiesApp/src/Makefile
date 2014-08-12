@@ -12,7 +12,7 @@ USR_INCLUDES += -I"$(TOP)/../../libraries/boost/include"
 
 LIBRARY_IOC += utilities
 
-PROD_IOC += uzhex
+PROD_IOC += uzhex zhex
 
 # xxxRecord.h will be created from xxxRecord.dbd
 #DBDINC += xxxRecord
@@ -29,6 +29,10 @@ utilities_LIBS += $(EPICS_BASE_IOC_LIBS)
 uzhex_SRCS += uzhex.cpp
 uzhex_LIBS += utilities zlib
 uzhex_LIBS += $(EPICS_BASE_IOC_LIBS)
+
+zhex_SRCS += zhex.cpp
+zhex_LIBS += utilities zlib
+zhex_LIBS += $(EPICS_BASE_IOC_LIBS)
 
 #===========================
 
