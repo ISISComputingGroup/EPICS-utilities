@@ -12,6 +12,8 @@ USR_INCLUDES += -I"$(TOP)/../../libraries/boost/include"
 
 LIBRARY_IOC += utilities
 
+PROD_IOC += uzhex
+
 # xxxRecord.h will be created from xxxRecord.dbd
 #DBDINC += xxxRecord
 # install icpconfig.dbd into <top>/dbd
@@ -23,6 +25,10 @@ utilities_SRCS += iocname.cpp trimString.cpp ioccalc.cpp compress.cpp mkdir.cpp 
 
 utilities_LIBS += zlib
 utilities_LIBS += $(EPICS_BASE_IOC_LIBS)
+
+uzhex_SRCS += uzhex.cpp
+uzhex_LIBS += utilities zlib
+uzhex_LIBS += $(EPICS_BASE_IOC_LIBS)
 
 #===========================
 
