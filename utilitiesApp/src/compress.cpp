@@ -42,6 +42,10 @@ epicsShareFunc int epicsShareAPI uncompressString(const std::string& comp_str, s
 {
 	int length = comp_str.length();
 	str.resize(0);
+	if (length == 0)
+	{
+		return 0;
+	}
 	if (length % 2 != 0) // strings created by compressString() are always an even number of bytes
 	{
 		std::cerr << "uncompressString: input length not an even number of characters" << std::endl;

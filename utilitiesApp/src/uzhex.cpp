@@ -23,6 +23,11 @@ int main(int argc, char* argv[])
 //			++iit;
 //		}
 	}
+	if (comp_str.find_first_of(" \t\r\n") != std::string::npos)
+	{
+	    std::cerr << "uzhex: whitespace characters found, did you forget the \"-t\" or \"-S\" options for caget?" << std::endl;
+		return -1;
+	}
 	int ret = uncompressString(comp_str, str);
 	if (ret == 0)
 	{
