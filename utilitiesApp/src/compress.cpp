@@ -51,6 +51,11 @@ epicsShareFunc int epicsShareAPI uncompressString(const std::string& comp_str, s
 		std::cerr << "uncompressString: input length not an even number of characters" << std::endl;
 		return -1;
 	}
+	if (comp_str.find_first_of(" \t\r\n") != std::string::npos)
+	{
+	    std::cerr << "uncompressString: whitespace characters found, did you forget the \"-t\" or \"-S\" options for caget?" << std::endl;
+		return -1;
+	}
 	std::vector<Byte> compr;
 	compr.reserve(length/2);
 	for(int i=0; i < length; i+=2)
