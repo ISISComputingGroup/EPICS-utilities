@@ -18,10 +18,11 @@ PROD_IOC += uzhex zhex
 #DBDINC += xxxRecord
 # install icpconfig.dbd into <top>/dbd
 DBD += utilities.dbd
-INC += utilities.h
+INC += utilities.h win32_dirent.h
 
 # specify all source files to be compiled and added to the library
-utilities_SRCS += iocname.cpp trimString.cpp ioccalc.cpp compress.cpp mkdir.cpp iocstringtest.cpp
+utilities_SRCS += iocname.cpp trimString.cpp ioccalc.cpp compress.cpp mkdir.cpp iocstringtest.cpp 
+utilities_SRCS_WIN32 += win32_dirent.c 
 
 utilities_LIBS += zlib
 utilities_LIBS += $(EPICS_BASE_IOC_LIBS)
