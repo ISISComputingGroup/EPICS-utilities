@@ -17,6 +17,8 @@ epicsShareFunc std::string epicsShareAPI getIOCGroup();
 epicsShareFunc int getFileList(const std::string& dirBase, std::list<std::string>& files);
 epicsShareFunc int filterList(std::list<std::string>& items, const std::string& regex);
 
+epicsShareFunc std::string json_list_to_array(std::list<std::string>& items);
+
 #ifdef _WIN32
 #include "win32_dirent.h"
 #else
