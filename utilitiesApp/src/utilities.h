@@ -1,6 +1,9 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
 
+#include <string>
+#include <list>
+
 epicsShareFunc std::string epicsShareAPI setIOCName(const char* iocName);
 epicsShareFunc std::string epicsShareAPI getIOCName();
 epicsShareFunc std::string epicsShareAPI getIOCGroup();
@@ -10,6 +13,9 @@ epicsShareFunc int epicsShareAPI uncompressString(const std::string& comp_str, s
 
 epicsShareFunc std::string epicsShareAPI getIOCName();
 epicsShareFunc std::string epicsShareAPI getIOCGroup();
+
+epicsShareFunc int getFileList(const std::string& dirBase, std::list<std::string>& files);
+epicsShareFunc int filterList(std::list<std::string>& items, const std::string& regex);
 
 #ifdef _WIN32
 #include "win32_dirent.h"
