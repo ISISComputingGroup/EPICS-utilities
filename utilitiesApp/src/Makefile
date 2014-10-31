@@ -35,6 +35,10 @@ zhex_SRCS += zhex.cpp
 zhex_LIBS += utilities zlib
 zhex_LIBS += $(EPICS_BASE_IOC_LIBS)
 
+BIN_INSTALLS_WIN32 += $(wildcard $(ZLIB)/bin/$(EPICS_HOST_ARCH)/*.dll)
+BIN_INSTALLS_WIN32 += $(wildcard $(LIBJSON)/bin/$(EPICS_HOST_ARCH)/*.dll)
+BIN_INSTALLS_WIN32 += $(wildcard $(PCRE)/bin/$(EPICS_HOST_ARCH)/*.dll)
+
 #===========================
 
 include $(TOP)/configure/RULES
