@@ -28,13 +28,14 @@ utilities_LIBS += zlib pcre libjson
 utilities_LIBS += $(EPICS_BASE_IOC_LIBS)
 
 uzhex_SRCS += uzhex.cpp
-uzhex_LIBS += utilities zlib
+uzhex_LIBS += utilities zlib pcre libjson
 uzhex_LIBS += $(EPICS_BASE_IOC_LIBS)
 
 zhex_SRCS += zhex.cpp
-zhex_LIBS += utilities zlib
+zhex_LIBS += utilities zlib pcre libjson
 zhex_LIBS += $(EPICS_BASE_IOC_LIBS)
 
+# Copy DLLs that executables depend on, this avoids having to put additional things into PATH in config_env 
 BIN_INSTALLS_WIN32 += $(wildcard $(ZLIB)/bin/$(EPICS_HOST_ARCH)/*.dll)
 BIN_INSTALLS_WIN32 += $(wildcard $(LIBJSON)/bin/$(EPICS_HOST_ARCH)/*.dll)
 BIN_INSTALLS_WIN32 += $(wildcard $(PCRE)/bin/$(EPICS_HOST_ARCH)/*.dll)
