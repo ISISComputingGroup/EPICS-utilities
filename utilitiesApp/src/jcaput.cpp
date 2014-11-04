@@ -1,6 +1,8 @@
 #include <string>
 #include <iostream>
 #include <iterator>
+#include <cstring>
+#include <cstdlib>
 
 #include <epicsGetopt.h>
 
