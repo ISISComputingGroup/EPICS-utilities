@@ -13,10 +13,18 @@
 static void usage()
 {
 	std::cerr << "Usage: jcaput [-h] [-v] [-s#] [-1] pv [value1] [value2] [value3]" << std::endl;
-	std::cerr << "Usage: -v    verbose output" << std::endl;
-	std::cerr << "Usage: -s#   use character # to split stdin" << std::endl;
-	std::cerr << "Usage: -1    send single element array rather than simple number/string" << std::endl;
-	std::cerr << "Usage: if no values specified, stdin is read and split on space, or character specified by -s" << std::endl;
+	std::cerr << "Usage: -h                        this help page" << std::endl;
+	std::cerr << "Usage: -v                        verbose output" << std::endl;
+	std::cerr << "Usage: -s#                       use character # to split stdin into an array" << std::endl;
+	std::cerr << "Usage: -1                        send one element array rather than a single number/string" << std::endl;
+	std::cerr << "Usage: pv                        required: process variable to send output to" << std::endl;
+	std::cerr << "Usage: [value1] [value2] ...     optional: values to form array from (default: stdin)" << std::endl;
+	std::cerr << " " << std::endl;
+	std::cerr << "Usage: if no values are specified, stdin is read and split on the character specified by -s (default: space)" << std::endl;
+	std::cerr << " " << std::endl;
+	std::cerr << "Usage:      echo first,second,third|jcaput -v -s, SOME:PROCESS:VARIABLE" << std::endl;
+	std::cerr << "Usage:      jcaput -v SOME:PROCESS:VARIABLE first second third" << std::endl;
+	std::cerr << " " << std::endl;
 }
 
 // jcaput pv [value1] [value2] [value3]
