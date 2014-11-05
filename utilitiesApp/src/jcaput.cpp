@@ -5,6 +5,7 @@
 #include <cstdlib>
 
 #include <epicsGetopt.h>
+#include <epicsString.h>
 
 #include <shareLib.h>
 
@@ -71,11 +72,12 @@ int main(int argc, char* argv[])
 	{
 	    std::getline(std::cin, str);
 		char* buffer = strdup(str.c_str());
-		const char* item = strtok(buffer, delims);
+		char* saveptr;
+		const char* item = epicsStrtok_r(buffer, delims, &saveptr);
 		while( item != NULL )
 		{
 			items.push_back(item);
-		    item = strtok(NULL, delims); 
+		    item = epicsStrtok_r(NULL, delims, &saveptr); 
 		}
 	}
 	else
