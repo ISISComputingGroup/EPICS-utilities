@@ -13,11 +13,13 @@
 
 static void usage()
 {
-	std::cerr << "Usage: jcaput [-h] [-v] [-s#] [-1] pv [value1] [value2] [value3]" << std::endl;
+	std::cerr << "Usage: jcaput [-h] [-v] [-s#] [-1] [-i] [-w] pv [value1] [value2] [value3]" << std::endl;
 	std::cerr << "Usage: -h                        this help page" << std::endl;
 	std::cerr << "Usage: -v                        verbose output" << std::endl;
 	std::cerr << "Usage: -s#                       use character # to split stdin into an array" << std::endl;
 	std::cerr << "Usage: -1                        send one element array rather than a single number/string" << std::endl;
+	std::cerr << "Usage: -i                        ignore whitespace in the input rather than creating an array" << std::endl;
+	std::cerr << "Usage: -w#                       set timeout for channel access to #, default 1.0 sec" << std::endl;
 	std::cerr << "Usage: pv                        required: process variable to send output to" << std::endl;
 	std::cerr << "Usage: [value1] [value2] ...     optional: values to form array from (default: stdin)" << std::endl;
 	std::cerr << " " << std::endl;
@@ -36,9 +38,11 @@ int main(int argc, char* argv[])
 	std::list<std::string> items;
 	const char* delims = " \t\r\n";
 	int opt;
+	long double waittime = 1.0f;
 	bool single_element = false;
 	bool verbose = false;
-    while ((opt = getopt(argc, argv, "1vhs:")) != -1) 
+	bool no_whitespace = false;
+    while ((opt = getopt(argc, argv, "1vhiw:s:")) != -1) 
 	{
         switch (opt) {
         case 'h':             
@@ -56,7 +60,15 @@ int main(int argc, char* argv[])
 		case '1':              
             single_element = true;
             break;
-
+		
+		case 'i':
+			no_whitespace = true;
+			break;
+		
+		case 'w':
+			waittime = std::stod(strdup(optarg));
+			break;
+			
 		default:
 			break;
 		}
@@ -82,9 +94,19 @@ int main(int argc, char* argv[])
 	}
 	else
 	{
-	    for(int i=optind+1; i<argc; ++i)
+		if (!no_whitespace)
 		{
-			items.push_back(argv[i]);
+			for(int i=optind+1; i<argc; ++i)
+			{
+				items.push_back(argv[i]);
+			}
+		} else {
+			std::string input = "";
+			for(int i=optind+1; i<argc; ++i)
+			{
+				input.append(argv[i]);
+			}
+			items.push_back(input);
 		}
 	}
 	std::string json;
@@ -99,7 +121,7 @@ int main(int argc, char* argv[])
 	int ret = compressString(json, comp_str);
 	if (ret == 0)
 	{
-	    std::string command = std::string("caput -S ") + pv + " " + comp_str;
+	    std::string command = std::string("caput -S -w") + std::to_string(waittime) + " " + pv + " " + comp_str;
 		if (verbose)
 		{
 			std::cout << "jcaput: JSON: " << json << std::endl;
