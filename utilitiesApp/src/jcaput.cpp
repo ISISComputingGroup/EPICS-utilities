@@ -3,6 +3,7 @@
 #include <iterator>
 #include <cstring>
 #include <cstdlib>
+#include <sstream>
 
 #include <epicsGetopt.h>
 #include <epicsString.h>
@@ -66,7 +67,7 @@ int main(int argc, char* argv[])
 			break;
 		
 		case 'w':
-			waittime = std::stod(strdup(optarg));
+			waittime = atof(optarg);
 			break;
 			
 		default:
@@ -121,13 +122,14 @@ int main(int argc, char* argv[])
 	int ret = compressString(json, comp_str);
 	if (ret == 0)
 	{
-	    std::string command = std::string("caput -S -w") + std::to_string(waittime) + " " + pv + " " + comp_str;
+	    std::ostringstream command;
+	    command <<  "caput -S -w" << waittime <<  " " << pv << " " << comp_str;
 		if (verbose)
 		{
 			std::cout << "jcaput: JSON: " << json << std::endl;
-			std::cout << "jcaput: " << command << std::endl;
+			std::cout << "jcaput: " << command.str() << std::endl;
 		}
-	    system(command.c_str());
+	    system(command.str().c_str());
     }		
 	return ret;
 }
