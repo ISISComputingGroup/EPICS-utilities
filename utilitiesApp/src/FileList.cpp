@@ -17,7 +17,7 @@ epicsShareFunc int getFileList(const std::string& dirBase, std::list<std::string
 	pDir = opendir(dirBase.c_str());
 
     if (pDir == NULL) {
-		closedir (pDir)
+		closedir (pDir);
         return -1;
     }
 
