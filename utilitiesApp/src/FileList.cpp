@@ -17,12 +17,18 @@ epicsShareFunc int getFileList(const std::string& dirBase, std::list<std::string
 	pDir = opendir(dirBase.c_str());
 
     if (pDir == NULL) {
+		closedir (pDir)
         return -1;
     }
 
-	//First two files are '.' and '..' so skip
-	readdir(pDir);
-	readdir(pDir);
+	//First two files may be '.' and '..' so skip
+	std::string read = readdir(pDir)->d_name;
+	if (read != ".")
+	{
+		files.push_back(read);
+	}else{
+		readdir(pDir);
+	}
 
     while ( (pDirent = readdir(pDir)) != NULL ) 
 	{

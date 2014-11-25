@@ -106,6 +106,7 @@ int main(int argc, char* argv[])
 			for(int i=optind+1; i<argc; ++i)
 			{
 				input.append(argv[i]);
+				input.append(" ");
 			}
 			items.push_back(input);
 		}
