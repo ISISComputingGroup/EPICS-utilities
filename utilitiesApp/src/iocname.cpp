@@ -43,12 +43,20 @@
 
 epicsShareFunc std::string epicsShareAPI setIOCName(const char* iocName)
 {
-	const char* iocBootDir = macEnvExpand("$(IOC)");
+    const char *iocBootDir = NULL, *old_iocName = macEnvExpand("$(IOCNAME=)");
 	if (iocName != NULL)
 	{
 	    iocBootDir = iocName;
 	}
-	if (iocBootDir == NULL || iocBootDir[0] == '\0')
+    else if (old_iocName && *old_iocName)
+    {
+	    iocBootDir = old_iocName;
+    }
+    else
+    {
+        iocBootDir = macEnvExpand("$(IOC)");
+    }
+	if (iocBootDir == NULL || *iocBootDir == '\0')
 	{
 		return "";
 	}
@@ -94,8 +102,8 @@ epicsShareFunc std::string epicsShareAPI setIOCName(const char* iocName)
 
 epicsShareFunc std::string epicsShareAPI getIOCName()
 {
-    const char* iocName = macEnvExpand("$(IOCNAME)");
-	if (iocName == NULL)
+    const char* iocName = macEnvExpand("$(IOCNAME=)");
+	if (iocName == NULL || *iocName == '\0')
 	{
 	    setIOCName(NULL);
 		iocName = macEnvExpand("$(IOCNAME)");
@@ -105,8 +113,8 @@ epicsShareFunc std::string epicsShareAPI getIOCName()
 
 epicsShareFunc std::string epicsShareAPI getIOCGroup()
 {
-    const char* iocGroup = macEnvExpand("$(IOCGROUP)");
-	if (iocGroup == NULL)
+    const char* iocGroup = macEnvExpand("$(IOCGROUP=)");
+	if (iocGroup == NULL || *iocGroup == '\0')
 	{
 	    setIOCName(NULL);
 		iocGroup = macEnvExpand("$(IOCGROUP)");
