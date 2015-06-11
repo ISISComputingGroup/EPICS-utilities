@@ -53,6 +53,7 @@
 // 0x1: verbose
 // 0x2: strlen(lhs) > 0
 // 0x4: lhs == rhs
+// 0x8: reverse the above logic
 static void iocstringtest(const char* resultvar, const char* lhs, int operation, const char* rhs)
 {
     if (resultvar == NULL || lhs == NULL)
@@ -61,6 +62,7 @@ static void iocstringtest(const char* resultvar, const char* lhs, int operation,
 		return;
 	}
 	bool verbose = (operation & 0x1);
+    bool reverse = (operation & 0x8 ? true : false);
     char* lhs_expand = macEnvExpand(lhs);
 	if (lhs_expand == NULL)
 	{
@@ -76,6 +78,10 @@ static void iocstringtest(const char* resultvar, const char* lhs, int operation,
     {
         result = 1;
     }
+    if (reverse)
+    {
+        result = (result == 0 ? 1 : 0);
+    }
 	char result_str[32];
 	if ( sprintf(result_str, "%s", (result != 0 ? " " : "#")) < 0 )
     {
@@ -90,11 +96,59 @@ static void iocstringtest(const char* resultvar, const char* lhs, int operation,
 	free(lhs_expand);
 }
 
+static void iocstringiftest(const char* resultvar, const char* lhs, int operation, const char* rhs)
+{
+    if (resultvar == NULL || lhs == NULL)
+	{
+	    errlogPrintf("iocstringiftest: ERROR: NULL args");
+		return;
+	}
+	bool verbose = (operation & 0x1);
+    char* lhs_expand = macEnvExpand(lhs);
+	if (lhs_expand == NULL)
+	{
+	    errlogPrintf("iocstringiftest: ERROR: NULL expanded expression arg");
+		return;
+	}
+	if (verbose)
+	{
+	    printf("iocstringiftest: expanded expression=\"%s\"\n", lhs_expand);
+	}
+	long result = 0;
+    if (strlen(lhs_expand) > 0)
+    {
+        result = 1;
+    }
+    char resultIfVar[128];
+    char resultNotIfVar[128];
+    sprintf(resultIfVar, "IF%s", resultvar);
+    sprintf(resultNotIfVar, "IFNOT%s", resultvar);
+    char resultIf[128];
+    char resultNotIf[128];
+    if (result != 0)
+    {
+        sprintf(resultIf, "%s", " ");
+        sprintf(resultNotIf, "%s", "#");
+    }
+    else
+    {
+        sprintf(resultIf, "%s", "#");
+        sprintf(resultNotIf, "%s", " ");
+    }
+	if (verbose)
+	{
+	    printf("iocstringiftest: setting %s=\"%s\"\n", resultIfVar, resultIf);
+	    printf("iocstringiftest: setting %s=\"%s\"\n", resultNotIfVar, resultNotIf);
+	}
+	epicsEnvSet(resultIfVar, resultIf);
+	epicsEnvSet(resultNotIfVar, resultNotIf);
+	free(lhs_expand);
+}
+
 extern "C" {
 
 // EPICS iocsh shell commands 
 
-// calc "result" "expression"
 static const iocshArg stringtestInitArg0 = { "resultvar", iocshArgString };
 static const iocshArg stringtestInitArg1 = { "lhs", iocshArgString };
 static const iocshArg stringtestInitArg2 = { "operation", iocshArgInt };
@@ -108,9 +162,23 @@ static void stringtestInitCallFunc(const iocshArgBuf *args)
     iocstringtest(args[0].sval, args[1].sval, args[2].ival, args[3].sval);
 }
 
+static const iocshArg stringiftestInitArg0 = { "resultvar", iocshArgString };
+static const iocshArg stringiftestInitArg1 = { "lhs", iocshArgString };
+static const iocshArg stringiftestInitArg2 = { "operation", iocshArgInt };
+static const iocshArg stringiftestInitArg3 = { "rhs", iocshArgString };
+static const iocshArg * const stringiftestInitArgs[] = { &stringiftestInitArg0, &stringiftestInitArg1, &stringiftestInitArg2, &stringiftestInitArg3 };
+
+static const iocshFuncDef stringiftestInitFuncDef = {"stringiftest", sizeof(stringiftestInitArgs) / sizeof(iocshArg*), stringiftestInitArgs};
+
+static void stringiftestInitCallFunc(const iocshArgBuf *args)
+{
+    iocstringiftest(args[0].sval, args[1].sval, args[2].ival, args[3].sval);
+}
+
 static void iocstringtestRegister(void)
 {
     iocshRegister(&stringtestInitFuncDef, stringtestInitCallFunc);
+    iocshRegister(&stringiftestInitFuncDef, stringiftestInitCallFunc);
 }
 
 epicsExportRegistrar(iocstringtestRegister); // need to be declared via registrar() in utilities.dbd too
