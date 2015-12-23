@@ -12,7 +12,7 @@ USR_INCLUDES += -I"$(TOP)/../../libraries/boost/include"
 
 LIBRARY_IOC += utilities
 
-PROD_IOC += uzhex zhex jcaput dbToDoxygen
+PROD_IOC += uzhex zhex jcaput
 
 # xxxRecord.h will be created from xxxRecord.dbd
 #DBDINC += xxxRecord
@@ -38,9 +38,6 @@ zhex_LIBS += $(EPICS_BASE_IOC_LIBS)
 jcaput_SRCS += jcaput.cpp
 jcaput_LIBS += utilities zlib pcre libjson
 jcaput_LIBS += $(EPICS_BASE_IOC_LIBS)
-
-dbToDoxygen_SRCS += dbToDoxygen.cpp
-dbToDoxygen_LIBS += $(EPICS_BASE_IOC_LIBS)
 
 # Copy DLLs that executables depend on, this avoids having to put additional things into PATH in config_env 
 BIN_INSTALLS_WIN32 += $(wildcard $(ZLIB)/bin/$(EPICS_HOST_ARCH)/*.dll)
