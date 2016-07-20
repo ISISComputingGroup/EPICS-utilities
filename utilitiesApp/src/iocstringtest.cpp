@@ -48,6 +48,62 @@
 
 #include "utilities.h"
 
+// operation
+// 0x1: verbose
+// 0x2: strlen(lhs) > 0
+// 0x4: lhs == rhs
+// 0x8: reverse the above logic
+static int stringtestres(const char* lhs, int operation, const char* rhs)
+{
+    if (lhs == NULL)
+	{
+	    errlogPrintf("iocstringtest: ERROR: NULL lhs arg");
+		return 0;
+	}
+	bool verbose = (operation & 0x1);
+    bool reverse = (operation & 0x8 ? true : false);
+    char* lhs_expand = macEnvExpand(lhs);
+    char* rhs_expand = (rhs != NULL ? macEnvExpand(rhs) : NULL);
+	if (lhs_expand == NULL)
+	{
+	    errlogPrintf("iocstringtest: ERROR: NULL expanded lhs expression arg");
+		return 0;
+	}
+	if (verbose)
+	{
+	    printf("iocstringtest: expanded expression=\"%s\"\n", lhs_expand);
+	}
+	long result = 0;
+	if (operation & 0x2)
+	{
+        if (strlen(lhs_expand) > 0)
+        {
+            result = 1;
+        }
+	}
+	else if (operation & 0x4)
+	{
+		if (rhs_expand != NULL)
+		{
+		    result = (strcmp(lhs_expand, rhs_expand) == 0 ? 1 : 0);
+		}
+		else
+		{
+	        errlogPrintf("iocstringtest: ERROR: NULL expanded rhs expression arg");
+		}
+	}
+    if (reverse)
+    {
+        result = (result == 0 ? 1 : 0);
+    }
+	free(lhs_expand);
+	if (rhs_expand != NULL)
+	{
+	    free(rhs_expand);
+	}
+	return result;
+}
+
 // return ' ' on true, '#' on false
 // operation
 // 0x1: verbose
@@ -56,32 +112,13 @@
 // 0x8: reverse the above logic
 static void iocstringtest(const char* resultvar, const char* lhs, int operation, const char* rhs)
 {
-    if (resultvar == NULL || lhs == NULL)
+    if (resultvar == NULL)
 	{
 	    errlogPrintf("iocstringtest: ERROR: NULL args");
 		return;
 	}
 	bool verbose = (operation & 0x1);
-    bool reverse = (operation & 0x8 ? true : false);
-    char* lhs_expand = macEnvExpand(lhs);
-	if (lhs_expand == NULL)
-	{
-	    errlogPrintf("iocstringtest: ERROR: NULL expanded expression arg");
-		return;
-	}
-	if (verbose)
-	{
-	    printf("iocstringtest: expanded expression=\"%s\"\n", lhs_expand);
-	}
-	long result = 0;
-    if (strlen(lhs_expand) > 0)
-    {
-        result = 1;
-    }
-    if (reverse)
-    {
-        result = (result == 0 ? 1 : 0);
-    }
+    int result = stringtestres(lhs, operation, rhs);
 	char result_str[32];
 	if ( sprintf(result_str, "%s", (result != 0 ? " " : "#")) < 0 )
     {
@@ -93,32 +130,22 @@ static void iocstringtest(const char* resultvar, const char* lhs, int operation,
 	    printf("iocstringtest: setting %s=\"%s\" (%ld)\n", resultvar, result_str, result);
 	}
 	epicsEnvSet(resultvar, result_str);
-	free(lhs_expand);
 }
 
+// operation
+// 0x1: verbose
+// 0x2: strlen(lhs) > 0
+// 0x4: lhs == rhs
+// 0x8: reverse the above logic
 static void iocstringiftest(const char* resultvar, const char* lhs, int operation, const char* rhs)
 {
-    if (resultvar == NULL || lhs == NULL)
+    if (resultvar == NULL)
 	{
-	    errlogPrintf("iocstringiftest: ERROR: NULL args");
+	    errlogPrintf("iocstringtest: ERROR: NULL args");
 		return;
 	}
 	bool verbose = (operation & 0x1);
-    char* lhs_expand = macEnvExpand(lhs);
-	if (lhs_expand == NULL)
-	{
-	    errlogPrintf("iocstringiftest: ERROR: NULL expanded expression arg");
-		return;
-	}
-	if (verbose)
-	{
-	    printf("iocstringiftest: expanded expression=\"%s\"\n", lhs_expand);
-	}
-	long result = 0;
-    if (strlen(lhs_expand) > 0)
-    {
-        result = 1;
-    }
+    int result = stringtestres(lhs, operation, rhs);
     char resultIfVar[128];
     char resultNotIfVar[128];
     sprintf(resultIfVar, "IF%s", resultvar);
@@ -142,7 +169,6 @@ static void iocstringiftest(const char* resultvar, const char* lhs, int operatio
 	}
 	epicsEnvSet(resultIfVar, resultIf);
 	epicsEnvSet(resultNotIfVar, resultNotIf);
-	free(lhs_expand);
 }
 
 extern "C" {
