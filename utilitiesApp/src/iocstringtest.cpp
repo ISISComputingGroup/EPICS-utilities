@@ -50,7 +50,7 @@
 
 // operation
 // 0x1: verbose
-// 0x2: strlen(lhs) > 0
+// 0x2: strlen(lhs) > 0 (default)
 // 0x4: lhs == rhs
 // 0x8: reverse the above logic
 static int stringtestres(const char* lhs, int operation, const char* rhs)
@@ -92,6 +92,13 @@ static int stringtestres(const char* lhs, int operation, const char* rhs)
 	        errlogPrintf("iocstringtest: ERROR: NULL expanded rhs expression arg");
 		}
 	}
+    else // old default
+    {
+        if (strlen(lhs_expand) > 0)
+        {
+            result = 1;
+        }        
+    }
     if (reverse)
     {
         result = (result == 0 ? 1 : 0);
@@ -134,7 +141,7 @@ static void iocstringtest(const char* resultvar, const char* lhs, int operation,
 
 // operation
 // 0x1: verbose
-// 0x2: strlen(lhs) > 0
+// 0x2: strlen(lhs) > 0 (default)
 // 0x4: lhs == rhs
 // 0x8: reverse the above logic
 static void iocstringiftest(const char* resultvar, const char* lhs, int operation, const char* rhs)
