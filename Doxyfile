@@ -44,8 +44,7 @@ PROJECT_BRIEF          = "EPICS Utilities"
 
 INPUT                  = . \
                          utilitiesApp/src \
-                         utilitiesApp/Db \
-						 iocBoot/iocutilitiesTest
+                         utilitiesApp/Db
 
 #EXCLUDE_PATTERNS = */pugi*.*
 
