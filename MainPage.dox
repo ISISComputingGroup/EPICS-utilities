@@ -1,0 +1,17 @@
+<HTML>
+/** @mainpage UTILITIES (EPICS Utilities Support Module)
+
+<PRE>
+dbLoadRecordsLoop()
+
+dbLoadRecordsList()
+
+iocshCmdLoop()
+
+iocshCmdList()
+</PRE>
+Load @link st.cmd @endlink into the utilitiesTest IOC in the iocBoot/iocutilitiesTest to see output and usage
+
+*/
+<!-- $Id: MainPage.dox 2668 2015-02-24 10:28:40Z faa59 $ -->
+</HTML>

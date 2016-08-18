@@ -19,6 +19,13 @@ epicsShareFunc int filterList(std::list<std::string>& items, const std::string& 
 
 epicsShareFunc std::string json_list_to_array(std::list<std::string>& items);
 
+epicsShareFunc void dbLoadRecordsLoop(const char* dbFile, const char* macros, const char* loopVar, int start, int stop, int step);
+epicsShareFunc void dbLoadRecordsList(const char* dbFile, const char* macros, const char* loopVar, const char* list, const char* sep);
+
+epicsShareFunc void iocshCmdLoop(const char* command, const char* macros, const char* loopVar, int start, int stop, int step);
+epicsShareFunc void iocshCmdList(const char* command, const char* macros, const char* loopVar, const char* list, const char* sep);
+
+
 #ifdef _WIN32
 #include "win32_dirent.h"
 #else

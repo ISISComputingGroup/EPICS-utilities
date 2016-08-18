@@ -21,7 +21,8 @@ DBD += utilities.dbd
 INC += utilities.h win32_dirent.h
 
 # specify all source files to be compiled and added to the library
-utilities_SRCS += iocname.cpp trimString.cpp ioccalc.cpp compress.cpp mkdir.cpp iocstringtest.cpp FileList.cpp json.cpp
+utilities_SRCS += iocname.cpp trimString.cpp ioccalc.cpp compress.cpp mkdir.cpp iocstringtest.cpp 
+utilities_SRCS += FileList.cpp json.cpp dbLoadRecordsFuncs.cpp iocshCmdFuncs.cpp
 utilities_SRCS_WIN32 += win32_dirent.c 
 
 utilities_LIBS += zlib pcre libjson
