@@ -103,8 +103,6 @@ static void subMacros(std::string& new_macros, const char* macros, const char* l
 ///     dbLoadRecordsLoop("file\$(I).db", "P=1,Q=Hello\$(I)", "I", 1, 4)
 /// @endcode 
 ///
-/// @see st.cmd for more examples
-///
 /// @param[in] dbFile @copydoc dbLoadRecordsLoopInitArg0
 /// @param[in] macros @copydoc dbLoadRecordsLoopInitArg1
 /// @param[in] loopVar @copydoc dbLoadRecordsLoopInitArg2
@@ -152,7 +150,7 @@ epicsShareFunc void dbLoadRecordsLoop(const char* dbFile, const char* macros, co
 /// it is possible to embed a macro within these whose value takes a value from the \a list.
 /// You can either load the same \a dbFile multiple times with different macros, or even load
 /// different database files by using \a loopVar as part of the filename. If you want to use a 
-/// pure numeric range see see dbLoadRecordsLoop()
+/// pure numeric range see dbLoadRecordsLoop()
 ///
 /// The name of the macro to be used for substitution is contained in \a loopVar and needs to be
 /// reference in an \\ escaped way to make sure EPICS does not try to substitute it too soon.
@@ -160,8 +158,6 @@ epicsShareFunc void dbLoadRecordsLoop(const char* dbFile, const char* macros, co
 /// @code
 ///     dbLoadRecordsList("file\$(I).db", "P=1,Q=Hello\$(S)", "S", "A;B;C", ";")
 /// @endcode 
-///
-/// @see st.cmd for more examples
 ///
 /// @param[in] dbFile @copydoc dbLoadRecordsListInitArg0
 /// @param[in] macros @copydoc dbLoadRecordsListInitArg1

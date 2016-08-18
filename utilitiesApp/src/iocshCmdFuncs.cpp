@@ -114,8 +114,6 @@ static void subMacros(std::string& new_macros, const char* macros, const char* l
 ///     iocshCmdLoop("< st\$(I).cmd", "P=1,Q=Hello\$(I)", "I", 1, 4)
 /// @endcode 
 ///
-/// @see st.cmd for more examples
-///
 /// @param[in] command @copydoc iocshCmdLoopInitArg0
 /// @param[in] macros @copydoc iocshCmdLoopInitArg1
 /// @param[in] loopVar @copydoc iocshCmdLoopInitArg2
@@ -187,8 +185,6 @@ epicsShareFunc void iocshCmdLoop(const char* command, const char* macros, const 
 /// @code
 ///     iocshCmdList("< st\$(S).cmd", "P=1,Q=Hello\$(S)", "S", "A;B;C", ";")
 /// @endcode 
-///
-/// @see st.cmd for more examples
 ///
 /// @param[in] command @copydoc iocshCmdListInitArg0
 /// @param[in] macros @copydoc iocshCmdListInitArg1
