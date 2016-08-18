@@ -97,7 +97,28 @@ static void subMacros(std::string& new_macros, const char* macros, const char* l
     }
 }
 
-/// execute command multiple times according to a number range
+/// Execute command multiple times substituting a specified macro according to a number range.
+///
+/// The \a command argument is executed, as per the usual EPICS iocshCmd(), but with additional 
+/// environment variables set according to the \a macros arguments; however at the end of execution
+/// these macros are reset back to their original values.
+/// It is possible to embed a changing macro \a loopVar within this list whose value follows the range \a start to \a stop.
+///
+/// The name of the macro to be used for substitution is contained in \a loopVar and needs to be
+/// referenced in an \\ escaped way to make sure EPICS does not try to substitute it too soon.
+/// As well as the \a macros the \a command is also passed the \a loopVar macro value
+/// @code
+///     iocshCmdLoop("< st\$(I).cmd", "P=1,Q=Hello\$(I)", "I", 1, 4)
+/// @endcode 
+///
+/// @see st.cmd for more examples
+///
+/// @param[in] command @copydoc iocshCmdLoopInitArg0
+/// @param[in] macros @copydoc iocshCmdLoopInitArg1
+/// @param[in] loopVar @copydoc iocshCmdLoopInitArg2
+/// @param[in] start @copydoc iocshCmdLoopInitArg3
+/// @param[in] stop @copydoc iocshCmdLoopInitArg4
+/// @param[in] step @copydoc iocshCmdLoopInitArg5
 epicsShareFunc void iocshCmdLoop(const char* command, const char* macros, const char* loopVar, int start, int stop, int step)
 {
     char loopVal[32];
@@ -150,7 +171,27 @@ epicsShareFunc void iocshCmdLoop(const char* command, const char* macros, const 
     }
 }
 
-/// load a db file multiple times according to a list of items separated by known separator(s)
+/// Execute a command multiple times according to a list of items separated by known separator(s).
+///
+/// The \a command argument is executed, as per the usual EPICS iocshCmd(), but with additional 
+/// environment variables set according to the \a macros arguments; however at the end of execution
+/// these macros are reset back to their original values.
+/// It is possible to embed a changing macro \a loopVar within this list whose value follows items in \a list.
+///
+/// The name of the macro to be used for substitution is contained in \a loopVar and needs to be
+/// referenced in an \\ escaped way to make sure EPICS does not try to substitute it too soon.
+/// As well as the \a macros the \a command is also passed the \a loopVar macro value
+/// @code
+///     iocshCmdList("< st\$(S).cmd", "P=1,Q=Hello\$(S)", "S", "A;B;C", ";")
+/// @endcode 
+///
+/// @see st.cmd for more examples
+///
+/// @param[in] command @copydoc iocshCmdListInitArg0
+/// @param[in] macros @copydoc iocshCmdListInitArg1
+/// @param[in] loopVar @copydoc iocshCmdListInitArg2
+/// @param[in] list @copydoc iocshCmdListInitArg3
+/// @param[in] sep @copydoc iocshCmdListInitArg4
 epicsShareFunc void iocshCmdList(const char* command, const char* macros, const char* loopVar, const char* list, const char* sep)
 {
     static const char* default_sep = ";";
@@ -209,20 +250,20 @@ extern "C" {
 
 // EPICS iocsh shell commands 
 
-static const iocshArg iocshCmdLoopInitArg0 = { "command", iocshArgString };			///< DB filename
+static const iocshArg iocshCmdLoopInitArg0 = { "command", iocshArgString };			///< command string
 static const iocshArg iocshCmdLoopInitArg1 = { "macros", iocshArgString };			///< macros
-static const iocshArg iocshCmdLoopInitArg2 = { "loopVar", iocshArgString };			///< macros
+static const iocshArg iocshCmdLoopInitArg2 = { "loopVar", iocshArgString };			///< loop variable name
 static const iocshArg iocshCmdLoopInitArg3 = { "start", iocshArgInt };			///< start
 static const iocshArg iocshCmdLoopInitArg4 = { "stop", iocshArgInt };			///< step
 static const iocshArg iocshCmdLoopInitArg5 = { "step", iocshArgInt };			///< stop
 static const iocshArg * const iocshCmdLoopInitArgs[] = { &iocshCmdLoopInitArg0, &iocshCmdLoopInitArg1,
      &iocshCmdLoopInitArg2, &iocshCmdLoopInitArg3, &iocshCmdLoopInitArg4, &iocshCmdLoopInitArg5 };
 
-static const iocshArg iocshCmdListInitArg0 = { "command", iocshArgString };			///< DB filename
+static const iocshArg iocshCmdListInitArg0 = { "command", iocshArgString };			///< command string
 static const iocshArg iocshCmdListInitArg1 = { "macros", iocshArgString };			///< macros
-static const iocshArg iocshCmdListInitArg2 = { "loopVar", iocshArgString };			///< macros
-static const iocshArg iocshCmdListInitArg3 = { "list", iocshArgString };			///< list
-static const iocshArg iocshCmdListInitArg4 = { "sep", iocshArgString };			///< separator
+static const iocshArg iocshCmdListInitArg2 = { "loopVar", iocshArgString };			///< loop variable name
+static const iocshArg iocshCmdListInitArg3 = { "list", iocshArgString };			///< value list
+static const iocshArg iocshCmdListInitArg4 = { "sep", iocshArgString };			///< value separator character
 static const iocshArg * const iocshCmdListInitArgs[] = { &iocshCmdListInitArg0, &iocshCmdListInitArg1,
      &iocshCmdListInitArg2, &iocshCmdListInitArg3,  &iocshCmdListInitArg4 };
 

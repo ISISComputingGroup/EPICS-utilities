@@ -85,7 +85,29 @@ static void subMacros(std::string& new_macros, const char* macros, const char* l
     }
 }
 
-/// load a db file multiple times according to a number range
+/// Load a db file multiple times substituting a specified macro according to a number range.
+///
+/// The \a dbFile and \a macros arguments are like the normal dbLoadRecords() however
+/// it is possible to embed a macro within these whose value follows the range \a start to \a stop.
+/// You can either load the same \a dbFile multiple times with different macros, or even load
+/// different database files by using \a loopVar as part of the filename. If you want to use a list
+/// of (non-numeric) substitutions rather than an integer range see dbLoadRecordsList()
+///
+/// The name of the macro to be used for substitution is contained in \a loopVar and needs to be
+/// reference in an \\ escaped way to make sure EPICS does not try to substitute it too soon.
+/// as well as the \a macros the \a dbFile is also passed the \a loopVar macro value
+/// @code
+///     dbLoadRecordsLoop("file\$(I).db", "P=1,Q=Hello\$(I)", "I", 1, 4)
+/// @endcode 
+///
+/// @see st.cmd for more examples
+///
+/// @param[in] dbFile @copydoc dbLoadRecordsLoopInitArg0
+/// @param[in] macros @copydoc dbLoadRecordsLoopInitArg1
+/// @param[in] loopVar @copydoc dbLoadRecordsLoopInitArg2
+/// @param[in] start @copydoc dbLoadRecordsLoopInitArg3
+/// @param[in] stop @copydoc dbLoadRecordsLoopInitArg4
+/// @param[in] step @copydoc dbLoadRecordsLoopInitArg5
 epicsShareFunc void dbLoadRecordsLoop(const char* dbFile, const char* macros, const char* loopVar, int start, int stop, int step)
 {
     char loopVal[32];
@@ -121,7 +143,28 @@ epicsShareFunc void dbLoadRecordsLoop(const char* dbFile, const char* macros, co
 	macDeleteHandle(mh);		
 }
 
-/// load a db file multiple times according to a list of items separated by known separator(s)
+/// Load a db file multiple times according to a list of items separated by known separator(s).
+///
+/// The \a dbFile and \a macros arguments are like the normal dbLoadRecords() however
+/// it is possible to embed a macro within these whose value takes a value from the \a list.
+/// You can either load the same \a dbFile multiple times with different macros, or even load
+/// different database files by using \a loopVar as part of the filename. If you want to use a 
+/// pure numeric range see see dbLoadRecordsLoop()
+///
+/// The name of the macro to be used for substitution is contained in \a loopVar and needs to be
+/// reference in an \\ escaped way to make sure EPICS does not try to substitute it too soon.
+/// as well as the \a macros the \a dbFile is also passed the \a loopVar macro value
+/// @code
+///     dbLoadRecordsList("file\$(I).db", "P=1,Q=Hello\$(S)", "S", "A;B;C", ";")
+/// @endcode 
+///
+/// @see st.cmd for more examples
+///
+/// @param[in] dbFile @copydoc dbLoadRecordsListInitArg0
+/// @param[in] macros @copydoc dbLoadRecordsListInitArg1
+/// @param[in] loopVar @copydoc dbLoadRecordsListInitArg2
+/// @param[in] list @copydoc dbLoadRecordsListInitArg3
+/// @param[in] sep @copydoc dbLoadRecordsListInitArg4
 epicsShareFunc void dbLoadRecordsList(const char* dbFile, const char* macros, const char* loopVar, const char* list, const char* sep)
 {
     static const char* default_sep = ";";
@@ -166,19 +209,19 @@ extern "C" {
 // EPICS iocsh shell commands 
 
 static const iocshArg dbLoadRecordsLoopInitArg0 = { "dbFile", iocshArgString };			///< DB filename
-static const iocshArg dbLoadRecordsLoopInitArg1 = { "macros", iocshArgString };			///< macros
-static const iocshArg dbLoadRecordsLoopInitArg2 = { "loopVar", iocshArgString };			///< macros
-static const iocshArg dbLoadRecordsLoopInitArg3 = { "start", iocshArgInt };			///< start
-static const iocshArg dbLoadRecordsLoopInitArg4 = { "stop", iocshArgInt };			///< step
-static const iocshArg dbLoadRecordsLoopInitArg5 = { "step", iocshArgInt };			///< stop
+static const iocshArg dbLoadRecordsLoopInitArg1 = { "macros", iocshArgString };			///< macros to pass to \a dbFile
+static const iocshArg dbLoadRecordsLoopInitArg2 = { "loopVar", iocshArgString };			///< loop macro variable name
+static const iocshArg dbLoadRecordsLoopInitArg3 = { "start", iocshArgInt };			///< start loop value
+static const iocshArg dbLoadRecordsLoopInitArg4 = { "stop", iocshArgInt };			///< loop step
+static const iocshArg dbLoadRecordsLoopInitArg5 = { "step", iocshArgInt };			///< end loop value
 static const iocshArg * const dbLoadRecordsLoopInitArgs[] = { &dbLoadRecordsLoopInitArg0, &dbLoadRecordsLoopInitArg1,
      &dbLoadRecordsLoopInitArg2, &dbLoadRecordsLoopInitArg3, &dbLoadRecordsLoopInitArg4, &dbLoadRecordsLoopInitArg5 };
 
 static const iocshArg dbLoadRecordsListInitArg0 = { "dbFile", iocshArgString };			///< DB filename
-static const iocshArg dbLoadRecordsListInitArg1 = { "macros", iocshArgString };			///< macros
-static const iocshArg dbLoadRecordsListInitArg2 = { "loopVar", iocshArgString };			///< macros
-static const iocshArg dbLoadRecordsListInitArg3 = { "list", iocshArgString };			///< list
-static const iocshArg dbLoadRecordsListInitArg4 = { "sep", iocshArgString };			///< separator
+static const iocshArg dbLoadRecordsListInitArg1 = { "macros", iocshArgString };			///< macros to pass to \a dbFile
+static const iocshArg dbLoadRecordsListInitArg2 = { "loopVar", iocshArgString };			///< loop macro variable name
+static const iocshArg dbLoadRecordsListInitArg3 = { "list", iocshArgString };			///< list of values to substitute
+static const iocshArg dbLoadRecordsListInitArg4 = { "sep", iocshArgString };			///< \a list value separator character
 static const iocshArg * const dbLoadRecordsListInitArgs[] = { &dbLoadRecordsListInitArg0, &dbLoadRecordsListInitArg1,
      &dbLoadRecordsListInitArg2, &dbLoadRecordsListInitArg3, &dbLoadRecordsListInitArg4 };
 
