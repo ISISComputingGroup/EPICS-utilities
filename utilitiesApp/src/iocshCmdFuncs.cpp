@@ -17,6 +17,9 @@
 #include <time.h>
 #include <sstream>
 #include <fstream>
+#ifndef _WIN32
+#include <unistd.h>
+#endif
 
 #include "epicsStdlib.h"
 #include "epicsString.h"
