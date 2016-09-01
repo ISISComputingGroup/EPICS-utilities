@@ -62,12 +62,18 @@ epicsShareFunc int epicsShareAPI uncompressString(const std::string& comp_str, s
 	{
 		compr.push_back(static_cast<Byte>(strtol(comp_str.substr(i,2).c_str(), NULL, 16)));
 	}
-	uLong uncomprLen = std::max(length * 10, 65536); // we have to guess a maximum for this
-	boost::scoped_array<Byte> uncompr(new Byte[uncomprLen]);
-	int err = uncompress(uncompr.get(), &uncomprLen, &(compr[0]), compr.size()); 
+	uLong uncomprLen = 0;
+	boost::scoped_array<Byte> uncompr;
+	int err = Z_OK;
+	for(int i=1; err != Z_BUF_ERROR && i<100; i *= 2)
+	{
+	    uncomprLen = std::max(length * 20 * i, 65536); // we have to guess this
+	    uncompr.reset(new Byte[uncomprLen]);
+	    err = uncompress(uncompr.get(), &uncomprLen, &(compr[0]), compr.size()); 
+	}
 	if (err != Z_OK)
 	{
-		std::cerr << "uncompressString: uncompress failed with error " << err << std::endl;
+		std::cerr << "uncompressString: uncompress failed with error " << err << " (length=" << length << ",uncomprLen=" << uncomprLen << ")" << std::endl;
 		return -1;
 	}
 	str.reserve(uncomprLen);
