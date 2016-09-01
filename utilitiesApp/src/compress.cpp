@@ -64,8 +64,8 @@ epicsShareFunc int epicsShareAPI uncompressString(const std::string& comp_str, s
 	}
 	uLong uncomprLen = 0;
 	boost::scoped_array<Byte> uncompr;
-	int err = Z_OK;
-	for(int i=1; err != Z_BUF_ERROR && i<100; i *= 2)
+	int err = Z_BUF_ERROR;
+	for(int i=1; err == Z_BUF_ERROR && i<100; i *= 2)
 	{
 	    uncomprLen = std::max(length * 20 * i, 65536); // we have to guess this
 	    uncompr.reset(new Byte[uncomprLen]);
