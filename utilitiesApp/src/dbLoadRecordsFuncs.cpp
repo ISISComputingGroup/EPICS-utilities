@@ -156,7 +156,7 @@ epicsShareFunc void dbLoadRecordsLoop(const char* dbFile, const char* macros, co
 /// reference in an \\ escaped way to make sure EPICS does not try to substitute it too soon.
 /// as well as the \a macros the \a dbFile is also passed the \a loopVar macro value
 /// @code
-///     dbLoadRecordsList("file\$(I).db", "P=1,Q=Hello\$(S)", "S", "A;B;C", ";")
+///     dbLoadRecordsList("file\$(S).db", "P=1,Q=Hello\$(S)", "S", "A;B;C", ";")
 /// @endcode 
 ///
 /// @param[in] dbFile @copydoc dbLoadRecordsListInitArg0
@@ -211,14 +211,14 @@ static const iocshArg dbLoadRecordsLoopInitArg0 = { "dbFile", iocshArgString };	
 static const iocshArg dbLoadRecordsLoopInitArg1 = { "macros", iocshArgString };			///< macros to pass to \a dbFile
 static const iocshArg dbLoadRecordsLoopInitArg2 = { "loopVar", iocshArgString };			///< loop macro variable name
 static const iocshArg dbLoadRecordsLoopInitArg3 = { "start", iocshArgInt };			///< start loop value
-static const iocshArg dbLoadRecordsLoopInitArg4 = { "stop", iocshArgInt };			///< loop step
-static const iocshArg dbLoadRecordsLoopInitArg5 = { "step", iocshArgInt };			///< end loop value
+static const iocshArg dbLoadRecordsLoopInitArg4 = { "stop", iocshArgInt };			///< end loop value
+static const iocshArg dbLoadRecordsLoopInitArg5 = { "step", iocshArgInt };			///< loop step (default: 1)
 static const iocshArg * const dbLoadRecordsLoopInitArgs[] = { &dbLoadRecordsLoopInitArg0, &dbLoadRecordsLoopInitArg1,
      &dbLoadRecordsLoopInitArg2, &dbLoadRecordsLoopInitArg3, &dbLoadRecordsLoopInitArg4, &dbLoadRecordsLoopInitArg5 };
 
 static const iocshArg dbLoadRecordsListInitArg0 = { "dbFile", iocshArgString };			///< DB filename
 static const iocshArg dbLoadRecordsListInitArg1 = { "macros", iocshArgString };			///< macros to pass to \a dbFile
-static const iocshArg dbLoadRecordsListInitArg2 = { "loopVar", iocshArgString };			///< loop macro variable name
+static const iocshArg dbLoadRecordsListInitArg2 = { "loopVar", iocshArgString };			///< list macro variable name
 static const iocshArg dbLoadRecordsListInitArg3 = { "list", iocshArgString };			///< list of values to substitute
 static const iocshArg dbLoadRecordsListInitArg4 = { "sep", iocshArgString };			///< \a list value separator character
 static const iocshArg * const dbLoadRecordsListInitArgs[] = { &dbLoadRecordsListInitArg0, &dbLoadRecordsListInitArg1,

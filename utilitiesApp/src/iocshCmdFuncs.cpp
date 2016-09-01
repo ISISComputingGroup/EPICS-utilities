@@ -250,19 +250,19 @@ extern "C" {
 // EPICS iocsh shell commands 
 
 static const iocshArg iocshCmdLoopInitArg0 = { "command", iocshArgString };			///< command string
-static const iocshArg iocshCmdLoopInitArg1 = { "macros", iocshArgString };			///< macros
-static const iocshArg iocshCmdLoopInitArg2 = { "loopVar", iocshArgString };			///< loop variable name
-static const iocshArg iocshCmdLoopInitArg3 = { "start", iocshArgInt };			///< start
-static const iocshArg iocshCmdLoopInitArg4 = { "stop", iocshArgInt };			///< step
-static const iocshArg iocshCmdLoopInitArg5 = { "step", iocshArgInt };			///< stop
+static const iocshArg iocshCmdLoopInitArg1 = { "macros", iocshArgString };			///< macros to pass to \a command
+static const iocshArg iocshCmdLoopInitArg2 = { "loopVar", iocshArgString };			///< loop macro variable name
+static const iocshArg iocshCmdLoopInitArg3 = { "start", iocshArgInt };			///< Loop start value
+static const iocshArg iocshCmdLoopInitArg4 = { "stop", iocshArgInt };			///< Loop end value
+static const iocshArg iocshCmdLoopInitArg5 = { "step", iocshArgInt };			///< Loop step (default: 1)
 static const iocshArg * const iocshCmdLoopInitArgs[] = { &iocshCmdLoopInitArg0, &iocshCmdLoopInitArg1,
      &iocshCmdLoopInitArg2, &iocshCmdLoopInitArg3, &iocshCmdLoopInitArg4, &iocshCmdLoopInitArg5 };
 
 static const iocshArg iocshCmdListInitArg0 = { "command", iocshArgString };			///< command string
-static const iocshArg iocshCmdListInitArg1 = { "macros", iocshArgString };			///< macros
-static const iocshArg iocshCmdListInitArg2 = { "loopVar", iocshArgString };			///< loop variable name
-static const iocshArg iocshCmdListInitArg3 = { "list", iocshArgString };			///< value list
-static const iocshArg iocshCmdListInitArg4 = { "sep", iocshArgString };			///< value separator character
+static const iocshArg iocshCmdListInitArg1 = { "macros", iocshArgString };			///< macros to pass to \a command
+static const iocshArg iocshCmdListInitArg2 = { "loopVar", iocshArgString };			///< list macro variable name
+static const iocshArg iocshCmdListInitArg3 = { "list", iocshArgString };			///< list of values to substitute
+static const iocshArg iocshCmdListInitArg4 = { "sep", iocshArgString };			///< list value separator character
 static const iocshArg * const iocshCmdListInitArgs[] = { &iocshCmdListInitArg0, &iocshCmdListInitArg1,
      &iocshCmdListInitArg2, &iocshCmdListInitArg3,  &iocshCmdListInitArg4 };
 
