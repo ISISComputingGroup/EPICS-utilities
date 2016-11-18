@@ -1,0 +1,10 @@
+
+record(stringout, "$(P)$(TO):UNITS_SET")
+{
+    field(DESC, "Push units from one pv to another")
+    field(DOL, "$(P)$(FROM) CP")
+	field(OMSL, "closed_loop")
+    field(OUT,  "$(P)$(TO).EGU PP")
+}
+
+
