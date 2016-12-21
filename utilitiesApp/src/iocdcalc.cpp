@@ -92,32 +92,19 @@ static void iocdcalc(const char* resultvar, const char* expression, int options,
 	char result_str[32];
 	double dsmall = 1.0E-20;
 	std::ostringstream format_str;
-	if (hash_mode)
+	
+	format_str << "%";
+	if (length > 0)
 	{
-		if ( sprintf(result_str, "%s", (abs(result) < dsmall ? " " : "#")) < 0 )
-		{
-			errlogPrintf("iocdcalc: ERROR: sprintf (hash mode)\n");
-			return;
-		}
+		format_str << length;
 	}
-	else
+	format_str << "f";
+	if ( sprintf(result_str, format_str.str().c_str(), result) < 0 )
 	{
-		format_str << "%";
-		if (zero_pad)
-		{
-			format_str << "0";
-		}
-		if (length > 0)
-		{
-			format_str << length;
-		}
-		format_str << "f";
-		if ( sprintf(result_str, format_str.str().c_str(), result) < 0 )
-		{
-			errlogPrintf("iocdcalc: ERROR: sprintf: %s\n", format_str.str().c_str());
-			return;
-		}
+		errlogPrintf("iocdcalc: ERROR: sprintf: %s\n", format_str.str().c_str());
+		return;
 	}
+	
 	epicsEnvSet(resultvar, result_str);
 	free(expr_expand);
 }
@@ -131,7 +118,7 @@ static const iocshArg dcalcInitArg0 = { "resultvar", iocshArgString };
 static const iocshArg dcalcInitArg1 = { "expression", iocshArgString };
 static const iocshArg dcalcInitArg2 = { "options", iocshArgInt };
 static const iocshArg dcalcInitArg3 = { "length", iocshArgInt };
-static const iocshArg * const calcInitArgs[] = { &calcInitArg0, &calcInitArg1, &calcInitArg2, &calcInitArg3 };
+static const iocshArg * const dcalcInitArgs[] = { &dcalcInitArg0, &dcalcInitArg1, &dcalcInitArg2, &dcalcInitArg3 };
 
 static const iocshFuncDef dcalcInitFuncDef = {"dcalc", sizeof(dcalcInitArgs) / sizeof(iocshArg*), dcalcInitArgs};
 
