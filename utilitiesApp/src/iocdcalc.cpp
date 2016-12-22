@@ -96,7 +96,7 @@ static void iocdcalc(const char* resultvar, const char* expression, int options,
 	format_str << "%";
 	if (length > 0)
 	{
-		format_str << length;
+		format_str << "." << length;
 	}
 	format_str << "f";
 	if ( sprintf(result_str, format_str.str().c_str(), result) < 0 )
