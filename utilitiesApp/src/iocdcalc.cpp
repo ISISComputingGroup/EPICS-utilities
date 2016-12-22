@@ -51,7 +51,7 @@
 // options
 // default: perform calc and return double in resultVar
 // 0x1: verbose
-static void iocdcalc(const char* resultvar, const char* expression, int options, int length)
+static void iocdcalc(const char* resultvar, const char* expression, int options, int precision)
 {
     if (resultvar == NULL || expression == NULL)
 	{
@@ -94,9 +94,9 @@ static void iocdcalc(const char* resultvar, const char* expression, int options,
 	std::ostringstream format_str;
 	
 	format_str << "%";
-	if (length > 0)
+	if (precision > 0)
 	{
-		format_str << "." << length;
+		format_str << "." << precision;
 	}
 	format_str << "f";
 	if ( sprintf(result_str, format_str.str().c_str(), result) < 0 )
@@ -117,7 +117,7 @@ extern "C" {
 static const iocshArg dcalcInitArg0 = { "resultvar", iocshArgString };
 static const iocshArg dcalcInitArg1 = { "expression", iocshArgString };
 static const iocshArg dcalcInitArg2 = { "options", iocshArgInt };
-static const iocshArg dcalcInitArg3 = { "length", iocshArgInt };
+static const iocshArg dcalcInitArg3 = { "precision", iocshArgInt };
 static const iocshArg * const dcalcInitArgs[] = { &dcalcInitArg0, &dcalcInitArg1, &dcalcInitArg2, &dcalcInitArg3 };
 
 static const iocshFuncDef dcalcInitFuncDef = {"dcalc", sizeof(dcalcInitArgs) / sizeof(iocshArg*), dcalcInitArgs};
