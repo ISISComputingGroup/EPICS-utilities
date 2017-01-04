@@ -36,3 +36,6 @@ iocshCmdLoop("< st\$(I).cmd", "Q=Hello\$(I)", "I", 1, 2)
 epicsEnvShow Q
 
 iocInit
+
+freeIPPort("FREEPORT")
+epicsEnvShow("FREEPORT")
