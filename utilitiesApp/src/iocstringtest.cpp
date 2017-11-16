@@ -1,3 +1,7 @@
+///
+/// @file iocstringtest.cpp EPICS functions for testing strings against each other
+/// @author Freddie Akeroyd, STFC ISIS Facility <freddie.akeroyd@stfc.ac.uk>
+///
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -48,11 +52,8 @@
 
 #include "utilities.h"
 
-// operation
-// 0x1: verbose
-// 0x2: strlen(lhs) > 0 (default)
-// 0x4: lhs == rhs
-// 0x8: reverse the above logic
+/// Does the actual calculation comparing the given strings to each other.
+/// Helper function, not to be called from an IOC.
 static int stringtestres(const char* lhs, int operation, const char* rhs)
 {
     if (lhs == NULL)
@@ -111,12 +112,17 @@ static int stringtestres(const char* lhs, int operation, const char* rhs)
 	return result;
 }
 
-// return ' ' on true, '#' on false
-// operation
-// 0x1: verbose
-// 0x2: strlen(lhs) > 0
-// 0x4: lhs == rhs
-// 0x8: reverse the above logic
+/// Compares the given strings based on the \a operation flag and returns ' ' on true and '#' on false into the \a resultvar macro.
+/// 
+/// E.g. to check if a macro named \a DO_I_EXIST does actually exist and put the result in a macro called \a EXISTS:
+/// @code
+///		stringtest("EXISTS", "$(DO_I_EXIST)")
+/// @endcode
+///
+/// @param[in] resultvar @copydoc stringtestInitArg0
+/// @param[in] lhs @copydoc stringtestInitArg1
+/// @param[in] operation @copydoc stringtestInitArg2
+/// @param[in] rhs @copydoc stringtestInitArg3
 static void iocstringtest(const char* resultvar, const char* lhs, int operation, const char* rhs)
 {
     if (resultvar == NULL)
@@ -139,11 +145,29 @@ static void iocstringtest(const char* resultvar, const char* lhs, int operation,
 	epicsEnvSet(resultvar, result_str);
 }
 
-// operation
-// 0x1: verbose
-// 0x2: strlen(lhs) > 0 (default)
-// 0x4: lhs == rhs
-// 0x8: reverse the above logic
+/// Compares the given strings based on the \a operation flag, putting the result in two different macros. 
+/// This function will create two macros called IF\a resultvar and IFNOT\a resultvar. If the comparison is 
+/// true a '#' will be placed in IFNOT\a resultvar. If the comparison is false a '#' will be placed in 
+/// IF\a resultvar.
+/// 
+/// E.g. to check if a macro named \a DO_I_EXIST does actually exist then do some follow up:
+/// @code
+///		stringtest("EXISTS", "$(DO_I_EXIST)")
+///		$(IFEXISTS) < st-existing.cmd
+///		$(IFNOTEXISTS) < st-not-existing.cmd
+/// @endcode
+///
+/// to check a macro named \a AM_I_CORRECT is equal to \a CORRECT_ANSWER then do some follow up:
+/// @code
+///		stringtest("EXPECTED", "$(AM_I_CORRECT)", 5, "CORRECT_ANSWER")
+///		$(IFEXPECTED) < st-expected.cmd
+///		$(IFNOTEXPECTED) < st-not-expected.cmd
+/// @endcode
+///
+/// @param[in] resultvar @copydoc stringtestInitArg0
+/// @param[in] lhs @copydoc stringtestInitArg1
+/// @param[in] operation @copydoc stringtestInitArg2
+/// @param[in] rhs @copydoc stringtestInitArg3
 static void iocstringiftest(const char* resultvar, const char* lhs, int operation, const char* rhs)
 {
     if (resultvar == NULL)
@@ -182,10 +206,16 @@ extern "C" {
 
 // EPICS iocsh shell commands 
 
-static const iocshArg stringtestInitArg0 = { "resultvar", iocshArgString };
-static const iocshArg stringtestInitArg1 = { "lhs", iocshArgString };
-static const iocshArg stringtestInitArg2 = { "operation", iocshArgInt };
-static const iocshArg stringtestInitArg3 = { "rhs", iocshArgString };
+static const iocshArg stringtestInitArg0 = { "resultvar", iocshArgString }; ///< The name of the macro to put the result of the calculation into.
+static const iocshArg stringtestInitArg1 = { "lhs", iocshArgString }; ///< The left hand side argument.
+
+/// The operation to perform on the string.
+/// 0x1: verbose
+/// 0x2: strlen(\a lhs) > 0 (default)
+/// 0x4: \a lhs == \a rhs
+/// 0x8: reverse the above logic
+static const iocshArg stringtestInitArg2 = { "operation", iocshArgInt }; 
+static const iocshArg stringtestInitArg3 = { "rhs", iocshArgString }; ///< The right hand side argument.
 static const iocshArg * const stringtestInitArgs[] = { &stringtestInitArg0, &stringtestInitArg1, &stringtestInitArg2, &stringtestInitArg3 };
 
 static const iocshFuncDef stringtestInitFuncDef = {"stringtest", sizeof(stringtestInitArgs) / sizeof(iocshArg*), stringtestInitArgs};
@@ -195,10 +225,16 @@ static void stringtestInitCallFunc(const iocshArgBuf *args)
     iocstringtest(args[0].sval, args[1].sval, args[2].ival, args[3].sval);
 }
 
-static const iocshArg stringiftestInitArg0 = { "resultvar", iocshArgString };
-static const iocshArg stringiftestInitArg1 = { "lhs", iocshArgString };
+static const iocshArg stringiftestInitArg0 = { "resultvar", iocshArgString }; ///< The name of the macro to put the result of the calculation into.
+static const iocshArg stringiftestInitArg1 = { "lhs", iocshArgString }; ///< The left hand side argument.
+
+/// The operation to perform on the string.
+/// 0x1: verbose
+/// 0x2: strlen(\a lhs) > 0 (default)
+/// 0x4: \a lhs == \a rhs
+/// 0x8: reverse the above logic
 static const iocshArg stringiftestInitArg2 = { "operation", iocshArgInt };
-static const iocshArg stringiftestInitArg3 = { "rhs", iocshArgString };
+static const iocshArg stringiftestInitArg3 = { "rhs", iocshArgString }; ///< The right hand side argument.
 static const iocshArg * const stringiftestInitArgs[] = { &stringiftestInitArg0, &stringiftestInitArg1, &stringiftestInitArg2, &stringiftestInitArg3 };
 
 static const iocshFuncDef stringiftestInitFuncDef = {"stringiftest", sizeof(stringiftestInitArgs) / sizeof(iocshArg*), stringiftestInitArgs};
