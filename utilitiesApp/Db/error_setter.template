@@ -1,0 +1,6 @@
+record(calcout, "$(P)$(PV_NAME):RAW") {
+    field("DESC", "Transfer error from stream pv to the pv_name")
+    field("INPB", "$(P)$(STREAM_PV) MS CP")
+    field("CALC", "A")
+    field("OUT", "$(P)$(PV_NAME) PP MS")
+}
