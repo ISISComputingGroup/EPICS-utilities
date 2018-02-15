@@ -1,0 +1,9 @@
+record(calcout, "$(P)$(PV_NAME):RAW") {
+    field(DESC, "Transfer error from INP.B to PV_NAME")
+    #INPA is set by the stream protocol file
+    field(INPB, "$(P)$(STREAM_PV) MS CP")
+    field(CALC, "A")
+    field(OUT, "$(P)$(PV_NAME) PP MS")
+}
+alias("$(P)$(PV_NAME)", "$(P)SIM:$(PV_NAME)")
+#
