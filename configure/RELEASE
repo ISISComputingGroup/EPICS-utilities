@@ -1,8 +1,8 @@
-# top level master release and local private options 
-include $(TOP)/../../../configure/MASTER_RELEASE
--include $(TOP)/../../../configure/MASTER_RELEASE.$(EPICS_HOST_ARCH)
--include $(TOP)/../../../configure/MASTER_RELEASE.private
--include $(TOP)/../../../configure/MASTER_RELEASE.private.$(EPICS_HOST_ARCH)
+# START OF AUTO GENERATED DEPENDENCIES
+LIBJSON=$(SUPPORT)/libjson/master
+PCRE=$(SUPPORT)/pcre/master
+ZLIB=$(SUPPORT)/zlib/master
+# END OF AUTO GENERATED DEPENDENCIES
 
 # optional extra local definitions here
 -include $(TOP)/configure/RELEASE.private

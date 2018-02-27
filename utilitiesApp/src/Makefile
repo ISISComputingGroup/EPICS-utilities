@@ -8,7 +8,7 @@ include $(TOP)/configure/CONFIG
 #==================================================
 # build a support library
 
-USR_INCLUDES += -I"$(TOP)/../../libraries/boost/include"
+USR_INCLUDES += -I"$(TOP)/../../../libraries/master/boost/include"
 
 LIBRARY_IOC += utilities
 
