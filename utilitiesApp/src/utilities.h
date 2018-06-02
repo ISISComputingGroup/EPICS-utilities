@@ -27,6 +27,8 @@ epicsShareFunc void iocshCmdList(const char* command, const char* macros, const 
 
 epicsShareFunc int freeIPPort(const char* macro);
 
+epicsShareFunc double getProcessUptime(const char* procExecutableName);
+
 #ifdef _WIN32
 #include "win32_dirent.h"
 #else

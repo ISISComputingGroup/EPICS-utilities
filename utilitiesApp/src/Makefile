@@ -23,7 +23,7 @@ INC += utilities.h win32_dirent.h
 # specify all source files to be compiled and added to the library
 utilities_SRCS += iocname.cpp trimString.cpp ioccalc.cpp iocdcalc.cpp compress.cpp mkdir.cpp iocstringtest.cpp 
 utilities_SRCS += FileList.cpp json.cpp dbLoadRecordsFuncs.cpp iocshCmdFuncs.cpp freeIPPort.cpp
-utilities_SRCS_WIN32 += win32_dirent.c
+utilities_SRCS_WIN32 += win32_dirent.c getProcessUptime.cpp
 
 utilities_LIBS += zlib pcre libjson
 utilities_LIBS += $(EPICS_BASE_IOC_LIBS)
