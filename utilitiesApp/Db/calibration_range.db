@@ -3,12 +3,15 @@ record(aSub, "$(P)CAL:RANGE") {
     
     field(INPA, "$(P)$(BDIR) MS CP")
     field(FTA, "STRING")
+    field(NOA, "1")
 
     field(INPB, "$(P)$(TDIR) MS CP")
-    field(FTB, "STRING")    
+    field(FTB, "STRING") 
+    field(NOB, "1")   
     
     field(INPC, "$(P)$(SPEC) MS CP")
     field(FTC, "STRING")
+    field(NOC, "1")
     
     field(OUTA, "$(P)$(HIGH_PV) PP MS")
     field(FTVA, "DOUBLE") 

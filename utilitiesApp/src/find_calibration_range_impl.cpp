@@ -52,7 +52,26 @@ long find_calibration_range_impl(aSubRecord *prec)
             }
             // Close file
             calibration_file.close();
-        }      
+        }
+        
+        //  Get highest and lowest values in the calibration file
+        double low_limit = std::stod(lines[0][0]);
+        double high_limit = std::stod(lines[lines.size() - 1][0]);
+
+        // Set the output values
+        // Check the types of output values
+        if (prec->ftva != menuFtypeDOUBLE) {
+            errlogSevPrintf(errlogMajor, "%s incorrect output argument type A", prec->name);
+            return 1;
+        }
+        if (prec->ftvb != menuFtypeDOUBLE) {
+            errlogSevPrintf(errlogMajor, "%s incorrect output argument type B", prec->name);
+            return 1;
+        }
+
+        // Set the values to the output PVs
+        (static_cast<double*>(prec->vala))[0] = low_limit;
+        (static_cast<double*>(prec->valb))[0] = high_limit;
     }
     catch (std::exception& e) {
         errlogSevPrintf(errlogMajor, "%s exception: %s", prec->name, e.what());
