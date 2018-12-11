@@ -7,6 +7,7 @@ ASYN=$(SUPPORT)/asyn/master
 ONCRPC=$(SUPPORT)/oncrpc/master
 SNCSEQ=$(SUPPORT)/seq/master
 ASUBFUNCTIONS=$(SUPPORT)/asubFunctions/master
+BOOST=$(EPICS_ROOT)/libraries/master/boost
 
 # END OF AUTO GENERATED DEPENDENCIES
 

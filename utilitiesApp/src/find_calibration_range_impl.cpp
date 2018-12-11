@@ -26,12 +26,12 @@ long find_calibration_range_impl(aSubRecord *prec)
     }
     if (prec->ftb != menuFtypeSTRING)
     {
-        errlogSevPrintf(errlogMajor, "%s incorrect input argument type A", prec->name);
+        errlogSevPrintf(errlogMajor, "%s incorrect input argument type B", prec->name);
         return 1;
     }
     if (prec->ftc != menuFtypeSTRING)
     {
-        errlogSevPrintf(errlogMajor, "%s incorrect input argument type A", prec->name);
+        errlogSevPrintf(errlogMajor, "%s incorrect input argument type C", prec->name);
         return 1;
     }
     try {
@@ -43,7 +43,7 @@ long find_calibration_range_impl(aSubRecord *prec)
         std::vector<std::vector<std::string>> lines;
         
         // If the file is open
-        if (calibration_file.is_open()) 
+        if (calibration_file.is_open())
         {
             // Iterate over the lines to the end
             while(calibration_file.peek() != EOF)
@@ -70,8 +70,8 @@ long find_calibration_range_impl(aSubRecord *prec)
         }
 
         // Set the values to the output PVs
-        (static_cast<double*>(prec->vala))[0] = low_limit;
-        (static_cast<double*>(prec->valb))[0] = high_limit;
+        (static_cast<double*>(prec->vala))[0] = high_limit;
+        (static_cast<double*>(prec->valb))[0] = low_limit;
     }
     catch (std::exception& e) {
         errlogSevPrintf(errlogMajor, "%s exception: %s", prec->name, e.what());

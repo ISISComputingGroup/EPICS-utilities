@@ -11,7 +11,9 @@
 #include <sstream>
 #include <fstream>
 #include <string>
+#include <iostream>
 
+#include <boost/algorithm/string.hpp>
 
 #include "find_calibration_range_utils.h"
 
@@ -36,14 +38,28 @@ std::vector<std::string> getNextLineAndSplitOnComma(std::ifstream& str) {
     return parsed_line;
 }
 
+std::string str_from_epics(void* raw_rec) {
+    epicsOldString* rec = reinterpret_cast<epicsOldString*>(raw_rec);
+    char buffer[sizeof(epicsOldString)+1];  // +1 for null terminator in the case where epics str is exactly 40 chars (unterminated)
+    buffer[sizeof(epicsOldString)] = '\0';
+    return std::string(strncpy(buffer, *rec, sizeof(epicsOldString)));
+}
+
+
 // Finds the directory to the table file
 std::string find_file(void* BDIR, void* TDIR, void* SPEC) {
 
-    std::string base_directory(*((epicsOldString*)(BDIR)), sizeof(epicsOldString));
-    std::string table_directory(*((epicsOldString*)(TDIR)), sizeof(epicsOldString));
-    std::string filename(*((epicsOldString*)(SPEC)), sizeof(epicsOldString));
-    
-    std::stringstream directory;
-    directory << base_directory << "\\" << table_directory << "\\" << filename;
-    return directory.str();
+    std::string base_directory = str_from_epics(BDIR);
+    std::string table_directory = str_from_epics(TDIR);
+    std::string filename = str_from_epics(SPEC);
+
+    boost::trim(base_directory);
+    boost::trim(table_directory);
+    boost::trim(filename);
+
+    return  base_directory + "/" + table_directory + "/" + filename;
 }
+
+/**
+ * Extracts a std::string from an epics aSubRecord.
+ */

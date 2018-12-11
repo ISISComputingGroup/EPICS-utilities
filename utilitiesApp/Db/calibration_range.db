@@ -15,9 +15,11 @@ record(aSub, "$(P)CAL:RANGE") {
     
     field(OUTA, "$(P)$(HIGH_PV) PP MS")
     field(FTVA, "DOUBLE") 
+    field(NOVA, "1")
    
     field(OUTB, "$(P)$(LOW_PV) PP MS")
     field(FTVB, "DOUBLE")
+    field(NOVB, "1")
 
     field(SNAM, "find_calibration_range")
 }
