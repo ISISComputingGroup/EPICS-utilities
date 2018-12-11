@@ -1,4 +1,4 @@
-record(aSub, "$(P)$(PV_NAME):CAL:RANGE") {
+record(aSub, "$(P)CAL:RANGE") {
     field(DESC, "Finds the calibration range")
     
     field(INPA, "$(P)$(BDIR) MS CP")
@@ -12,6 +12,6 @@ record(aSub, "$(P)$(PV_NAME):CAL:RANGE") {
    
     field(OUTB, "$(P)$(LOW_PV) PP MS")
     field(FTVB, "DOUBLE")
+
+    field(SNAM, "find_calibration_range")
 }
-
-
