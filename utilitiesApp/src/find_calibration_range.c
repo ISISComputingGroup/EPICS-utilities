@@ -3,10 +3,11 @@
 #include <aSubRecord.h>
 #include <epicsExport.h>
 
+#include "find_calibration_range_impl.h"
+
 static long find_calibration_range(aSubRecord *prec)
 {
-    /* Either call a C++ function (see below) or implement logic here. */
-    return 0;
+    return find_calibration_range_impl(prec);
 }
 
 epicsRegisterFunction(find_calibration_range);

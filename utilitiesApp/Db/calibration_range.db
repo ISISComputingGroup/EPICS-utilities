@@ -5,7 +5,10 @@ record(aSub, "$(P)CAL:RANGE") {
     field(FTA, "STRING")
 
     field(INPB, "$(P)$(TDIR) MS CP")
-    field(FTB, "STRING")
+    field(FTB, "STRING")    
+    
+    field(INPC, "$(P)$(SPEC) MS CP")
+    field(FTC, "STRING")
     
     field(OUTA, "$(P)$(HIGH_PV) PP MS")
     field(FTVA, "DOUBLE") 
