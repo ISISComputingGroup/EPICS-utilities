@@ -26,9 +26,7 @@ utilities_SRCS += iocname.cpp trimString.cpp ioccalc.cpp iocdcalc.cpp compress.c
 utilities_SRCS += FileList.cpp json.cpp dbLoadRecordsFuncs.cpp iocshCmdFuncs.cpp freeIPPort.cpp
 utilities_SRCS_WIN32 += win32_dirent.c getProcessUptime.cpp
 
-utilities_SRCS += find_calibration_range.c find_calibration_range_impl.cpp
-
-
+utilities_SRCS += find_calibration_range.c find_calibration_range_impl.cpp find_calibration_range_utils.cpp
 
 utilities_LIBS += zlib pcre libjson
 utilities_LIBS += $(EPICS_BASE_IOC_LIBS)
@@ -61,6 +59,7 @@ TESTPROD_HOST += runner
 USR_CPPFLAGS += -I$(GTEST)/googletest/include 
 runner_SRCS += run_all_tests.cc
 runner_SRCS += calibration_range_tests.cc
+runner_SRCS += find_calibration_range_utils.cpp
 runner_LIBS += gtest
 endif
 endif
