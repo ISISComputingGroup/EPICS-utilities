@@ -28,6 +28,8 @@ utilities_SRCS_WIN32 += win32_dirent.c getProcessUptime.cpp
 
 utilities_SRCS += find_calibration_range.c find_calibration_range_impl.cpp
 
+
+
 utilities_LIBS += zlib pcre libjson
 utilities_LIBS += $(EPICS_BASE_IOC_LIBS)
 
@@ -49,6 +51,19 @@ jcaput_LIBS += $(EPICS_BASE_IOC_LIBS)
 BIN_INSTALLS_WIN32 += $(wildcard $(ZLIB)/bin/$(EPICS_HOST_ARCH)/*.dll)
 BIN_INSTALLS_WIN32 += $(wildcard $(LIBJSON)/bin/$(EPICS_HOST_ARCH)/*.dll)
 BIN_INSTALLS_WIN32 += $(wildcard $(PCRE)/bin/$(EPICS_HOST_ARCH)/*.dll)
+
+# googleTest Runner
+ifneq ($(findstring windows,$(EPICS_HOST_ARCH)),)
+ifeq ($(findstring 10.0,$(VCVERSION)),)
+SRC_DIRS += $(TOP)/utilitiesApp/tests
+
+TESTPROD_HOST += runner
+USR_CPPFLAGS += -I$(GTEST)/googletest/include 
+runner_SRCS += run_all_tests.cc
+runner_SRCS += calibration_range_tests.cc
+runner_LIBS += gtest
+endif
+endif
 
 #===========================
 
