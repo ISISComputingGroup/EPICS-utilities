@@ -4,6 +4,7 @@
 #include <fstream>
 #include <vector>
 #include <stdio.h>
+#include <epicsString.h>
 
 #include "gtest\gtest.h"
 #include "..\src\find_calibration_range_utils.h"
@@ -110,5 +111,31 @@ namespace {
 
         // Clean up
         std::remove(filename.c_str());
+    }
+
+    TEST(ConvertEpicsOldString, GIVEN_an_epics_old_string_THEN_it_is_converted_to_a_std_string) {
+        // Given
+        epicsOldString epics_old_string = "This is an EPICS old string";
+        std::string expected = "This is an EPICS old string";
+
+        // When:
+        std::string result = str_from_epics((void*)(&epics_old_string));
+
+        // Then:
+        ASSERT_EQ(result, expected);
+    }    
+    
+    TEST(GetCalibrationFilePath, GIVEN_an_collection_of_directories_THEN_they_are_converted_to_an_absolute_path) {
+        // Given
+        epicsOldString BDIR = "C:/Instrument/Settings";
+        epicsOldString TDIR = "config/common/temps";
+        epicsOldString SPEC = "None.txt";
+        std::string expected = "C:/Instrument/Settings/config/common/temps/None.txt";
+
+        // When:
+        std::string result = find_file((void*)(&BDIR), (void*)(&TDIR), (void*)(&SPEC));
+
+        // Then:
+        ASSERT_EQ(result, expected);
     }
 } // namespace
