@@ -44,7 +44,7 @@ long find_calibration_range_impl(aSubRecord *prec) {
             // Iterate over the lines
             while (calibration_file.peek() != EOF)
             {
-                lines.push_back(getNextLineAndSplitOnComma(&calibration_file));
+                lines.push_back(getNextLineAndSplitOnComma(calibration_file));
             }
             calibration_file.close();
         }
