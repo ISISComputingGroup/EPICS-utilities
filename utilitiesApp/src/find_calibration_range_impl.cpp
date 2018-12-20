@@ -15,7 +15,6 @@
 
 
 long find_calibration_range_impl(aSubRecord *prec) {
-    /* Returns the first input value back */
     // Check for input types
     if (prec->fta != menuFtypeSTRING)
     {
@@ -33,30 +32,27 @@ long find_calibration_range_impl(aSubRecord *prec) {
         return 1;
     }
     try {
-        // Load file
         std::string calibration_file_location = find_file(prec->a, prec->b, prec->c);
         std::ifstream calibration_file;
+        // Load file
         calibration_file.open(calibration_file_location);
 
         std::vector<std::vector<std::string>> lines;
 
-        // If the file is open
         if (calibration_file.is_open())
         {
-            // Iterate over the lines to the end
+            // Iterate over the lines
             while (calibration_file.peek() != EOF)
             {
-                lines.push_back(getNextLineAndSplitOnComma(calibration_file));
+                lines.push_back(getNextLineAndSplitOnComma(&calibration_file));
             }
-            // Close file
             calibration_file.close();
         }
 
-        //  Get highest and lowest values in the calibration file
+        //  Get highest and lowest values in the first column of the calibration file
         double low_limit = std::stod(lines[0][0]);
         double high_limit = std::stod(lines[lines.size() - 1][0]);
 
-        // Set the output values
         // Check the types of output values
         if (prec->ftva != menuFtypeDOUBLE) {
             errlogSevPrintf(errlogMajor, "%s incorrect output argument type A", prec->name);
