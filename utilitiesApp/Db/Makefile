@@ -13,6 +13,7 @@ include $(TOP)/configure/CONFIG
 #DB += xxx.db
 DB += unit_setter.template
 DB += error_setter.template
+DB += calibration_range.db
 
 #----------------------------------------------------
 # If <anyname>.db template is not named <anyname>*.template add

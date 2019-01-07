@@ -3,6 +3,13 @@ LIBJSON=$(SUPPORT)/libjson/master
 PCRE=$(SUPPORT)/pcre/master
 UTILITIES=$(SUPPORT)/utilities/master
 ZLIB=$(SUPPORT)/zlib/master
+ASYN=$(SUPPORT)/asyn/master
+ONCRPC=$(SUPPORT)/oncrpc/master
+SNCSEQ=$(SUPPORT)/seq/master
+ASUBFUNCTIONS=$(SUPPORT)/asubFunctions/master
+BOOST=$(EPICS_ROOT)/libraries/master/boost
+GTEST=$(SUPPORT)/googletest/master
+
 # END OF AUTO GENERATED DEPENDENCIES
 
 # optional extra local definitions here

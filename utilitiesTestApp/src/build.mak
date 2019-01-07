@@ -19,6 +19,7 @@ DBD += $(APPNAME).dbd
 $(APPNAME)_DBD += base.dbd
 ## ISIS standard dbd ##
 $(APPNAME)_DBD += utilities.dbd
+
 ## add other dbd here ##
 #$(APPNAME)_DBD += xxx.dbd
 

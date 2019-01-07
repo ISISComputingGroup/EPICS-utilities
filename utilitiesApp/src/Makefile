@@ -18,6 +18,7 @@ PROD_IOC += uzhex zhex jcaput
 #DBDINC += xxxRecord
 # install icpconfig.dbd into <top>/dbd
 DBD += utilities.dbd
+
 INC += utilities.h win32_dirent.h
 
 # specify all source files to be compiled and added to the library
@@ -25,8 +26,11 @@ utilities_SRCS += iocname.cpp trimString.cpp ioccalc.cpp iocdcalc.cpp compress.c
 utilities_SRCS += FileList.cpp json.cpp dbLoadRecordsFuncs.cpp iocshCmdFuncs.cpp freeIPPort.cpp
 utilities_SRCS_WIN32 += win32_dirent.c getProcessUptime.cpp
 
+utilities_SRCS += find_calibration_range.c find_calibration_range_impl.cpp find_calibration_range_utils.cpp
+
 utilities_LIBS += zlib pcre libjson
 utilities_LIBS += $(EPICS_BASE_IOC_LIBS)
+
 utilities_SYS_LIBS_WIN32 += ws2_32
 
 uzhex_SRCS += uzhex.cpp
@@ -45,6 +49,20 @@ jcaput_LIBS += $(EPICS_BASE_IOC_LIBS)
 BIN_INSTALLS_WIN32 += $(wildcard $(ZLIB)/bin/$(EPICS_HOST_ARCH)/*.dll)
 BIN_INSTALLS_WIN32 += $(wildcard $(LIBJSON)/bin/$(EPICS_HOST_ARCH)/*.dll)
 BIN_INSTALLS_WIN32 += $(wildcard $(PCRE)/bin/$(EPICS_HOST_ARCH)/*.dll)
+
+# googleTest Runner
+ifneq ($(findstring windows,$(EPICS_HOST_ARCH)),)
+ifeq ($(findstring 10.0,$(VCVERSION)),)
+SRC_DIRS += $(TOP)/utilitiesApp/tests
+
+TESTPROD_HOST += runner
+USR_CPPFLAGS += -I$(GTEST)/googletest/include 
+runner_SRCS += run_all_tests.cc
+runner_SRCS += calibration_range_tests.cc
+runner_SRCS += find_calibration_range_utils.cpp
+runner_LIBS += gtest
+endif
+endif
 
 #===========================
 
