@@ -17,4 +17,6 @@ include $(TOP)/configure/RULES_TOP
 
 .PHONY: test
 test:
+ifeq ($(findstring 10.0,$(VCVERSION)),)
 	utilitiesApp/src/O.$(EPICS_HOST_ARCH)/runner --gtest_output=xml:$(TOP)/test-reports/TEST-IOCName.xml
+endif
