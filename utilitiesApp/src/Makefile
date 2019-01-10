@@ -51,7 +51,6 @@ BIN_INSTALLS_WIN32 += $(wildcard $(LIBJSON)/bin/$(EPICS_HOST_ARCH)/*.dll)
 BIN_INSTALLS_WIN32 += $(wildcard $(PCRE)/bin/$(EPICS_HOST_ARCH)/*.dll)
 
 # googleTest Runner
-ifneq ($(findstring windows,$(EPICS_HOST_ARCH)),)
 ifeq ($(findstring 10.0,$(VCVERSION)),)
 SRC_DIRS += $(TOP)/utilitiesApp/tests
 
@@ -61,7 +60,6 @@ runner_SRCS += run_all_tests.cc
 runner_SRCS += calibration_range_tests.cc
 runner_SRCS += find_calibration_range_utils.cpp
 runner_LIBS += gtest
-endif
 endif
 
 #===========================

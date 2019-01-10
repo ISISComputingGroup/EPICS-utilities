@@ -17,4 +17,4 @@ include $(TOP)/configure/RULES_TOP
 
 .PHONY: test
 test:
-	run_tests.bat
+	utilitiesApp/src/O.$(EPICS_HOST_ARCH)/runner --gtest_output=xml:$(TOP)/test-reports/TEST-IOCName.xml

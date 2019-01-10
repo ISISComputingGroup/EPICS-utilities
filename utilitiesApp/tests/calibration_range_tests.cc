@@ -6,8 +6,8 @@
 #include <stdio.h>
 #include <epicsString.h>
 
-#include "gtest\gtest.h"
-#include "..\src\find_calibration_range_utils.h"
+#include "gtest/gtest.h"
+#include "find_calibration_range_utils.h"
 
 namespace {
 
