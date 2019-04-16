@@ -5,5 +5,4 @@ record(calcout, "$(P)$(PV_NAME):RAW") {
     field(CALC, "A")
     field(OUT, "$(P)$(PV_NAME) PP MS")
 }
-alias("$(P)$(PV_NAME)", "$(P)SIM:$(PV_NAME)")
 #
