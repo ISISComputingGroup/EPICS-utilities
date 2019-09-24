@@ -1,0 +1,10 @@
+
+record(stringout, "$(P)$(TO):RAW")
+{
+    field(DESC, "Push a field from one pv to another")
+    field(DOL, "$(P)$(FROM).$(FIELD=VAL) CP")
+	field(OMSL, "closed_loop")
+    field(OUT,  "$(P)$(TO).$(FIELD=VAL) $(PROCESS_FLAGS=PP)")
+}
+
+
