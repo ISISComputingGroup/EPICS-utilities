@@ -13,10 +13,12 @@ function getMacroValue (options)
     if type(options.macro) ~= "string" then
         error("No macro given")
     end
-    macro = options.macro
-    default = options.default
+    local macro = options.macro
+    local default = options.default
 
-    macroFromEnvironment = os.getenv(macro)
+    local macroFromEnvironment = os.getenv(macro)
+    -- Becomes either the value or default, or an error is raised before it is returned
+    local macroValue = nil
 
     if (macroFromEnvironment~=nil) then
         -- Macro set to value from environment
