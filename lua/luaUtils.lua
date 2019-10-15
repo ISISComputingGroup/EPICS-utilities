@@ -1,4 +1,4 @@
-function getMacroValue (options)
+function getMacroValue(options)
     --[[
         Gets the value of a macro from the environment, or returns the given default value
         Signature:
@@ -59,13 +59,10 @@ function setHardwareFlowControl(device, flowControlOn)
             device: String, the name of the asyn port
             flowControlOn: Boolean, true if hardware flow control is on.
     ]]
-    if (flowControlOn) then
-        iocsh.asynSetOption(device, 0, "clocal", "N")
-        iocsh.asynSetOption(device, 0, "crtscts", "Y")
-    else
-        iocsh.asynSetOption(device, 0, "clocal", "Y")
-        iocsh.asynSetOption(device, 0, "crtscts", "N")
-    end
+    local clocal = flowControlOn and "N" or "Y"
+    local crtscts = flowControlOn and "Y" or "N"
+    iocsh.asynSetOption(device, 0, "clocal", clocal)
+    iocsh.asynSetOption(device, 0, "crtscts", crtscts)
 end
 
 function setSoftwareFlowControl(device, flowControlOn)
@@ -75,11 +72,8 @@ function setSoftwareFlowControl(device, flowControlOn)
             device: String, the name of the asyn port
             flowControlOn: Boolean, true if software flow control is on.
     ]]
-    if (flowControlOn) then
-        asyn.asynSetOption(device, 0, "ixon", "N")
-        asyn.asynSetOption(device, 0, "ixoff", "N")
-    else
-        asyn.asynSetOption(device, 0, "ixon", "Y")
-        asyn.asynSetOption(device, 0, "ixoff", "Y")
-    end
+    local ixon = flowControlOn and "N" or "Y"
+    local ixoff = flowControlOn and "N" or "Y"
+    asyn.asynSetOption(device, 0, "ixon", ixon)
+    asyn.asynSetOption(device, 0, "ixoff", ixoff)
 end
