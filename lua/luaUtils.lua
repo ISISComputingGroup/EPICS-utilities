@@ -52,28 +52,28 @@ function setAsynOptions(port, device, baud, bits, parity, stop)
     iocsh.asynSetOption(port, -1, "stop", stop)
 end
 
-function setHardwareFlowControl(device, flowControlOn)
+function setHardwareFlowControl(port, flowControlOn)
     --[[
         Sets hardware flow control
         Args:
-            device: String, the name of the asyn port
+            port: String, the name of the asyn port
             flowControlOn: Boolean, true if hardware flow control is on.
     ]]
     local clocal = flowControlOn and "N" or "Y"
     local crtscts = flowControlOn and "Y" or "N"
-    iocsh.asynSetOption(device, 0, "clocal", clocal)
-    iocsh.asynSetOption(device, 0, "crtscts", crtscts)
+    iocsh.asynSetOption(port, -1, "clocal", clocal)
+    iocsh.asynSetOption(port, -1, "crtscts", crtscts)
 end
 
-function setSoftwareFlowControl(device, flowControlOn)
+function setSoftwareFlowControl(port, flowControlOn)
     --[[
         Sets software flow control
         Args:
-            device: String, the name of the asyn port
+            port: String, the name of the asyn port
             flowControlOn: Boolean, true if software flow control is on.
     ]]
     local ixon = flowControlOn and "Y" or "N"
     local ixoff = flowControlOn and "Y" or "N"
-    asyn.asynSetOption(device, 0, "ixon", ixon)
-    asyn.asynSetOption(device, 0, "ixoff", ixoff)
+    asyn.asynSetOption(port, -1, "ixon", ixon)
+    asyn.asynSetOption(port, -1, "ixoff", ixoff)
 end
