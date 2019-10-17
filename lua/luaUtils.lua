@@ -34,22 +34,22 @@ function getMacroValue(options)
     return macroValue
 end
 
-function setAsynOptions(device, port, baud, bits, parity, stop)
+function setAsynOptions(port, device, baud, bits, parity, stop)
     --[[
         Sets the Asyn Options
         Args:
-            device: String, the name of the asyn port
-            port: String, the name of the physical port the device is connected to
+            port: String, the name of the asyn port
+            device: String, the name of the physical port the device is connected to
             baud: Integer, The baud rate of the device
             bits: Integer, the number of data bits
             parity: String, the device parity
             stop: Integer, the number of stop bits.
     ]]
-    iocsh.drvAsynSerialPortConfigure(device, port, 0, 0, 0, 0)
-    iocsh.asynSetOption(device, -1, "baud", baud)
-    iocsh.asynSetOption(device, -1, "bits", bits)
-    iocsh.asynSetOption(device, -1, "parity", parity)
-    iocsh.asynSetOption(device, -1, "stop", stop)
+    iocsh.drvAsynSerialPortConfigure(port, device, 0, 0, 0, 0)
+    iocsh.asynSetOption(port, -1, "baud", baud)
+    iocsh.asynSetOption(port, -1, "bits", bits)
+    iocsh.asynSetOption(port, -1, "parity", parity)
+    iocsh.asynSetOption(port, -1, "stop", stop)
 end
 
 function setHardwareFlowControl(device, flowControlOn)
@@ -72,8 +72,8 @@ function setSoftwareFlowControl(device, flowControlOn)
             device: String, the name of the asyn port
             flowControlOn: Boolean, true if software flow control is on.
     ]]
-    local ixon = flowControlOn and "N" or "Y"
-    local ixoff = flowControlOn and "N" or "Y"
+    local ixon = flowControlOn and "Y" or "N"
+    local ixoff = flowControlOn and "Y" or "N"
     asyn.asynSetOption(device, 0, "ixon", ixon)
     asyn.asynSetOption(device, 0, "ixoff", ixoff)
 end
