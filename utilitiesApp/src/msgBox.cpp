@@ -1,3 +1,7 @@
+///
+/// @file msgBox.cpp EPICS functions for launching a message box
+/// @author Freddie Akeroyd, STFC ISIS Facility <freddie.akeroyd@stfc.ac.uk>
+///
 #ifdef _WIN32
 #include "windows.h"
 #endif
@@ -20,6 +24,7 @@ static const iocshArg * const msgBoxInitArgs[] = { &msgBoxArg0, &msgBoxArg1 };
 
 static const iocshFuncDef msgBoxFuncDef = {"msgBox", sizeof(msgBoxInitArgs) / sizeof(iocshArg*), msgBoxInitArgs};
 
+/// Run up a message box on windows with the title and text from args[0] and args[1] respectively
 static void msgBoxCallFunc(const iocshArgBuf *args)
 {
 	const char* title = (args[0].sval != NULL ? args[0].sval : "IOC Message Box");
@@ -29,6 +34,7 @@ static void msgBoxCallFunc(const iocshArgBuf *args)
 #endif
 }
 
+/// Register the message box function for use in an ioc boot cmd
 static void msgBoxRegister(void)
 {
     iocshRegister(&msgBoxFuncDef, msgBoxCallFunc);
