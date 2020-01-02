@@ -13,6 +13,8 @@ iocshCmdList()
 iocstringtest()
 
 iocstringiftest()
+
+msgBox()
 </PRE>
 Load @link st.cmd @endlink into the utilitiesTest IOC in the iocBoot/iocutilitiesTest to see output and usage
 
