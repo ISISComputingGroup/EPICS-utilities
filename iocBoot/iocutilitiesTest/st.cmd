@@ -32,6 +32,11 @@ iocshCmdList("dbgrep $(MYPVPREFIX)A\$(S)*", "", "S", "X;Y;Z", ";")
 # variables for use in the script and then reset back to their pre-script values
 iocshCmdLoop("< st\$(I).cmd", "Q=Hello\$(I)", "I", 1, 2)
 
+
+epicsEnvSet("NAME", "UTILITIESTEST")
+dbLoadRecords("$(TOP)/db/simple_val.db", "P=$(MYPVPREFIX)$(NAME):")
+dbLoadRecords("$(UTILITIES)/db/check_stability.db", "P=$(MYPVPREFIX)$(NAME):,INP_VAL=$(MYPVPREFIX)$(NAME):VAL,SP=$(MYPVPREFIX)$(NAME):VAL:SP,NSAMP=$(NSAMP=5),TOLERANCE=$(TOLERANCE=0.1)")
+
 # confirm Q is unset on return
 epicsEnvShow Q
 

@@ -1,0 +1,15 @@
+# DB used by IOC tests to test check_stability.db
+
+record(ao, "$(P)VAL") {
+  field(VAL, "0")
+  field(PINI, "YES")
+  field(SIMM, "YES")
+  
+  field(FLNK, "$(P)STAB:SCANNOW")
+}
+
+record(ao, "$(P)VAL:SP") {
+  field(VAL, "0")
+  field(PINI, "YES")
+  field(SIMM, "YES")
+}
