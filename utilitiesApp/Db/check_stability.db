@@ -1,0 +1,80 @@
+#
+# Checks that a given PV has been "stable" for a specified amount of time
+#
+# Macros: 
+#   $(P) - a unique PV prefix for this DB. This prefix must be different each time you load this db into one IOC.
+#   $(INP_VAL) - A PV containing the input value (e.g. readback from the device)
+#   $(SP) - A PV containing the setpoint value (e.g. an SP:RBV from the device)
+#   $(NSAMP) - number of samples needed before value can be declared stable
+#   $(TOLERANCE) - The tolerance to apply between the setpoint and the readback
+#
+# Public API:
+#   $(P)STAB:SCANNOW - Process this PV when a new sample should be taken (e.g. FLNK to this from $(INP_VAL) )
+#   $(P)STAB:HAS_RECENT_ALARM - 1 if the input PV has been in alarm for any of the last $(NSAMP) samples, 0 otherwise
+#   $(P)STAB:IS_STABLE - 1 if the input PV has not been in alarm and continuously within tolerance of $(SP) for the last $(NSAMP) samples
+#
+
+record(bo, "$(P)STAB:SCANNOW") {
+  field(FLNK, "$(P)STAB:_SEVR_BUFF")
+}
+
+# Circular buffer of values severities
+record(compress, "$(P)STAB:_SEVR_BUFF") {
+  field(INP, "$(INP_VAL).SEVR")
+  field(ALG, "Circular Buffer")
+  field(NSAM, "$(NSAMP)")
+  field(FLNK, "$(P)STAB:_SEVR_COMP")
+}
+
+# Selects largest error status from circular buffer above.
+# If >=3, there has been a comms error in the last $(NSAMP) samples.
+record(compress, "$(P)STAB:_SEVR_COMP") {
+  field(INP, "$(P)STAB:_SEVR_BUFF")
+  field(ALG, "N to 1 High Value")
+  field(NSAM, "1")
+  field(N, "$(NSAMP)")
+  field(FLNK, "$(P)STAB:HAS_RECENT_ALARM")
+}
+
+# Whether any of the last $(NSAMP) samples have had an alarm >= 3 (INVALID)
+record(calc, "$(P)STAB:HAS_RECENT_ALARM") {
+  field(INPA, "$(P)STAB:_SEVR_COMP")
+  field(CALC, "A>=3")
+  field(ASG, "READONLY")
+  field(FLNK, "$(P)STAB:_VAL_BUFF")
+}
+
+# Circular buffer of values sampled from $(INP_VAL)
+record(compress, "$(P)STAB:_VAL_BUFF") {
+  field(INP, "$(INP_VAL)")
+  field(ALG, "Circular Buffer")
+  field(NSAM, "$(NSAMP)")
+  field(FLNK, "$(P)STAB:_VAL_HIGHEST")
+}
+
+# Highest sampled value (within the last $(NSAMP) samples)
+record(compress, "$(P)STAB:_VAL_HIGHEST") {
+  field(INP, "$(P)STAB:_VAL_BUFF")
+  field(ALG, "N to 1 High Value")
+  field(NSAM, "1")
+  field(N, "$(NSAMP)")
+  field(FLNK, "$(P)STAB:_VAL_LOWEST")
+}
+
+# Lowest sampled value (within the last $(NSAMP) samples)
+record(compress, "$(P)STAB:_VAL_LOWEST") {
+  field(INP, "$(P)STAB:_VAL_BUFF")
+  field(ALG, "N to 1 Low Value")
+  field(NSAM, "1")
+  field(N, "$(NSAMP)")
+  field(FLNK, "$(P)STAB:IS_STABLE")
+}
+
+record(calc, "$(P)STAB:IS_STABLE") {
+  field(INPA, "$(P)STAB:HAS_RECENT_ALARM")
+  field(INPB, "$(P)STAB:_VAL_HIGHEST")
+  field(INPC, "$(P)STAB:_VAL_LOWEST")
+  field(INPD, "$(SP)")
+  field(E, "$(TOLERANCE)")
+  field(CALC, "(!A) && (ABS(B-D)<=E) && (ABS(C-D)<=E)")
+}

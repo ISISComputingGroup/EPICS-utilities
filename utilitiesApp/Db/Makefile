@@ -15,6 +15,8 @@ DB += unit_setter.template
 DB += error_setter.template
 DB += field_setter.template
 DB += calibration_range.db
+DB += check_stability.db
+DB += simple_val.db
 
 #----------------------------------------------------
 # If <anyname>.db template is not named <anyname>*.template add
