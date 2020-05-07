@@ -1,4 +1,6 @@
-function getMacroValue(options)
+local available_functions = {}
+
+function available_functions.getMacroValue(options)
     --[[
         Gets the value of a macro from the environment, or returns the given default value
         Signature:
@@ -34,7 +36,7 @@ function getMacroValue(options)
     return macroValue
 end
 
-function setAsynOptions(port, device, baud, bits, parity, stop)
+function available_functions.setAsynOptions(port, device, baud, bits, parity, stop)
     --[[
         Sets the Asyn Options
         Args:
@@ -52,7 +54,7 @@ function setAsynOptions(port, device, baud, bits, parity, stop)
     iocsh.asynSetOption(port, -1, "stop", stop)
 end
 
-function setHardwareFlowControl(port, flowControlOn)
+function available_functions.setHardwareFlowControl(port, flowControlOn)
     --[[
         Sets hardware flow control
         Args:
@@ -65,7 +67,7 @@ function setHardwareFlowControl(port, flowControlOn)
     iocsh.asynSetOption(port, -1, "crtscts", crtscts)
 end
 
-function setSoftwareFlowControl(port, flowControlOn)
+function available_functions.setSoftwareFlowControl(port, flowControlOn)
     --[[
         Sets software flow control
         Args:
@@ -74,6 +76,8 @@ function setSoftwareFlowControl(port, flowControlOn)
     ]]
     local ixon = flowControlOn and "Y" or "N"
     local ixoff = flowControlOn and "Y" or "N"
-    asyn.asynSetOption(port, -1, "ixon", ixon)
-    asyn.asynSetOption(port, -1, "ixoff", ixoff)
+    iocsh.asynSetOption(port, -1, "ixon", ixon)
+    iocsh.asynSetOption(port, -1, "ixoff", ixoff)
 end
+
+return available_functions
