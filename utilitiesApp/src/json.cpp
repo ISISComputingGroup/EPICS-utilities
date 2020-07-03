@@ -22,9 +22,9 @@ epicsShareFunc std::string json_list_to_array(const std::list<std::string>& item
 	return out;
 }
 
-epicsShareFunc std::string json_map_to_dict(const std::map<std::string, std::string>& items)
+epicsShareFunc std::string json_map_to_node(const std::map<std::string, std::string>& items)
 {
-	JSONNODE *a = json_new(JSON_ARRAY);
+	JSONNODE *a = json_new(JSON_NODE);
 
 	for (std::map<std::string, std::string>::const_iterator it = items.begin(); it != items.end(); ++it)
 	{

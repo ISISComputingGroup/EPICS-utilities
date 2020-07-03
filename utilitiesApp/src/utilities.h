@@ -19,7 +19,7 @@ epicsShareFunc int getFileList(const std::string& dirBase, std::list<std::string
 epicsShareFunc int filterList(std::list<std::string>& items, const std::string& regex);
 
 epicsShareFunc std::string json_list_to_array(const std::list<std::string>& items);
-epicsShareFunc std::string json_map_to_dict(const std::map<std::string, std::string>& items);
+epicsShareFunc std::string json_map_to_node(const std::map<std::string, std::string>& items);
 
 epicsShareFunc void dbLoadRecordsLoop(const char* dbFile, const char* macros, const char* loopVar, int start, int stop, int step);
 epicsShareFunc void dbLoadRecordsList(const char* dbFile, const char* macros, const char* loopVar, const char* list, const char* sep);
