@@ -26,7 +26,7 @@ epicsShareFunc std::string json_map_to_dict(const std::map<std::string, std::str
 {
 	JSONNODE *a = json_new(JSON_ARRAY);
 
-	for (std::map<std::string>::const_iterator it = items.begin(); it != items.end(); ++it)
+	for (std::map<std::string, std::string>::const_iterator it = items.begin(); it != items.end(); ++it)
 	{
 		json_push_back(a, json_new_a(it->first.c_str(), it->second.c_str()));
 	}
