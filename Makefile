@@ -13,12 +13,4 @@ $(foreach dir, $(filter-out configure,$(DIRS)),$(eval $(call DIR_template,$(dir)
 utilitiesTestApp_DEPEND_DIRS += utilitiesApp
 iocBoot_DEPEND_DIRS += $(filter %App,$(DIRS))
 
-TEST_RUNNER = $(TOP)/utilitiesApp/src/O.$(EPICS_HOST_ARCH)/runner
-
 include $(TOP)/configure/RULES_TOP
-
-.PHONY: test
-test:
-ifneq ($(wildcard $(TEST_RUNNER)*),)
-	$(TEST_RUNNER) --gtest_output=xml:$(TOP)/test-reports/TEST-Utilities.xml
-endif
