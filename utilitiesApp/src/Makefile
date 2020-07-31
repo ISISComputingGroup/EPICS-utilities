@@ -54,12 +54,10 @@ BIN_INSTALLS_WIN32 += $(wildcard $(PCRE)/bin/$(EPICS_HOST_ARCH)/*.dll)
 ifeq ($(findstring 10.0,$(VCVERSION)),)
 SRC_DIRS += $(TOP)/utilitiesApp/tests
 
-TESTPROD_HOST += runner
-USR_CPPFLAGS += -I$(GTEST)/googletest/include 
-runner_SRCS += run_all_tests.cc
+GTESTPROD_HOST += runner
 runner_SRCS += calibration_range_tests.cc
 runner_SRCS += find_calibration_range_utils.cpp
-runner_LIBS += gtest
+GTESTS += runner 
 endif
 
 #===========================
@@ -67,4 +65,4 @@ endif
 include $(TOP)/configure/RULES
 #----------------------------------------
 #  ADD RULES AFTER THIS LINE
-
+include $(GTEST)/cfg/compat.RULES_BUILD
