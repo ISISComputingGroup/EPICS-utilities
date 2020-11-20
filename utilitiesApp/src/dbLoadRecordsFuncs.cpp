@@ -203,13 +203,60 @@ epicsShareFunc void dbLoadRecordsList(const char* dbFile, const char* macros, co
 	macDeleteHandle(mh);		
 }
 
+
+/// Create an alias for all records starting with prefix \a recordPrefix by replacing this with \a aliasPrefix
+///
+/// This is a bit like having an alias gateway, but without needing to run a gateway
+/// coudl be extended to only prefix records with e.g. a particular info field present
+///
+/// So if a piece of movable equipoment was being used locally and its PVs/autosave were all set
+/// up in the ME: domain, then aliases for local use could be created using
+/// @code
+///     dbAliasRecords("ME:", "$(MYPVPREFIX)")
+/// @endcode 
+///
+/// @param[in] recordPrefix @copydoc dbAliasRecordsInitArg0
+/// @param[in] aliasPrefix @copydoc dbAliasRecordsInitArg1
+epicsShareFunc void dbAliasRecords(const char* recordPrefix, const char* aliasPrefix)
+{
+    if (!*aliasPrefix) {
+        return;
+    }
+    size_t nprefix = strlen(recordPrefix);
+    std::string alias_str(aliasPrefix);
+    DBENTRY dbentry;
+    DBENTRY *pdbentry=&dbentry;
+    long status;
+    if (!pdbbase) {
+        throw std::runtime_error("No database loaded\n");
+    }
+    dbInitEntry(pdbbase, pdbentry);
+    status = dbFirstRecordType(pdbentry);
+    if (status) {
+        return;
+    }
+    while (!status) {
+        status = dbFirstRecord(pdbentry);
+        while (!status) {
+            if (!strncmp(dbGetRecordName(pdbentry), recordPrefix, nprefix)) {
+                if (dbCreateAlias(pdbentry, (alias_str + (dbGetRecordName(pdbentry) + nprefix)).c_str())) {
+                    epicsPrintf("dbAliasRecords: Can't create alias for %s\n", dbGetRecordName(pdbentry));
+                }
+            }
+            status = dbNextRecord(pdbentry);
+        }
+        status = dbNextRecordType(pdbentry);
+    }
+    dbFinishEntry(pdbentry);
+}
+
 extern "C" {
 
 // EPICS iocsh shell commands 
 
 static const iocshArg dbLoadRecordsLoopInitArg0 = { "dbFile", iocshArgString };			///< DB filename
 static const iocshArg dbLoadRecordsLoopInitArg1 = { "macros", iocshArgString };			///< macros to pass to \a dbFile
-static const iocshArg dbLoadRecordsLoopInitArg2 = { "loopVar", iocshArgString };			///< loop macro variable name
+static const iocshArg dbLoadRecordsLoopInitArg2 = { "loopVar", iocshArgString };	    ///< loop macro variable name
 static const iocshArg dbLoadRecordsLoopInitArg3 = { "start", iocshArgInt };			///< start loop value
 static const iocshArg dbLoadRecordsLoopInitArg4 = { "stop", iocshArgInt };			///< end loop value
 static const iocshArg dbLoadRecordsLoopInitArg5 = { "step", iocshArgInt };			///< loop step (default: 1)
@@ -224,9 +271,15 @@ static const iocshArg dbLoadRecordsListInitArg4 = { "sep", iocshArgString };			/
 static const iocshArg * const dbLoadRecordsListInitArgs[] = { &dbLoadRecordsListInitArg0, &dbLoadRecordsListInitArg1,
      &dbLoadRecordsListInitArg2, &dbLoadRecordsListInitArg3, &dbLoadRecordsListInitArg4 };
 
+static const iocshArg dbAliasRecordsInitArg0 = { "recordPrefix", iocshArgString };   ///< prefix of records that we wish to alias
+static const iocshArg dbAliasRecordsInitArg1 = { "aliasPrefix", iocshArgString };    ///< what to replace \a recordPrefix with
+static const iocshArg * const dbAliasRecordsInitArgs[] = { &dbAliasRecordsInitArg0, &dbAliasRecordsInitArg1 };
+
 static const iocshFuncDef dbLoadRecordsLoopDef = {"dbLoadRecordsLoop", sizeof(dbLoadRecordsLoopInitArgs) / sizeof(iocshArg*), dbLoadRecordsLoopInitArgs};
 
 static const iocshFuncDef dbLoadRecordsListDef = {"dbLoadRecordsList", sizeof(dbLoadRecordsListInitArgs) / sizeof(iocshArg*), dbLoadRecordsListInitArgs};
+
+static const iocshFuncDef dbAliasRecordsDef = {"dbAliasRecords", sizeof(dbAliasRecordsInitArgs) / sizeof(iocshArg*), dbAliasRecordsInitArgs};
 
 static void dbLoadRecordsLoopInitCallFunc(const iocshArgBuf *args)
 {
@@ -238,10 +291,16 @@ static void dbLoadRecordsListInitCallFunc(const iocshArgBuf *args)
     dbLoadRecordsList(args[0].sval, args[1].sval, args[2].sval, args[3].sval, args[4].sval);
 }
 
+static void dbAliasRecordsInitCallFunc(const iocshArgBuf *args)
+{
+    dbAliasRecords(args[0].sval, args[1].sval);
+}
+
 static void dbLoadRecordsFuncsRegister(void)
 {
     iocshRegister(&dbLoadRecordsLoopDef, dbLoadRecordsLoopInitCallFunc);
     iocshRegister(&dbLoadRecordsListDef, dbLoadRecordsListInitCallFunc);
+    iocshRegister(&dbAliasRecordsDef, dbAliasRecordsInitCallFunc);
 }
 
 epicsExportRegistrar(dbLoadRecordsFuncsRegister); // need to be declared via registrar() in utilities.dbd too
