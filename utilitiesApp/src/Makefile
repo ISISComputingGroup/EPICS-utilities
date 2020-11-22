@@ -28,7 +28,7 @@ utilities_SRCS_WIN32 += win32_dirent.c getProcessUptime.cpp
 
 utilities_SRCS += find_calibration_range.c find_calibration_range_impl.cpp find_calibration_range_utils.cpp
 
-utilities_LIBS += zlib pcre libjson
+utilities_LIBS += zlib pcrecpp pcre libjson
 utilities_LIBS += $(EPICS_BASE_IOC_LIBS)
 
 utilities_SYS_LIBS_WIN32 += ws2_32 user32
