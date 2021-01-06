@@ -213,13 +213,13 @@ epicsShareFunc void dbLoadRecordsList(const char* dbFile, const char* macros, co
 /// So if a piece of movable equipoment was being used locally and its PVs/autosave were all set
 /// up in the ME: domain, then aliases for local use could be created using
 /// @code
-///     dbAliasRecords("ME:", "$(MYPVPREFIX)")
+///     dbAliasRecordsPrefix("ME:", "$(MYPVPREFIX)")
 /// @endcode 
 ///
-/// @param[in] recordPrefix @copydoc dbAliasRecordsInitArg0
-/// @param[in] aliasPrefix @copydoc dbAliasRecordsInitArg1
-/// @param[in] verbose @copydoc dbAliasRecordsInitArg2
-epicsShareFunc void dbAliasRecords(const char* recordPrefix, const char* aliasPrefix, int verbose)
+/// @param[in] recordPrefix @copydoc dbAliasRecordsPrefixInitArg0
+/// @param[in] aliasPrefix @copydoc dbAliasRecordsPrefixInitArg1
+/// @param[in] verbose @copydoc dbAliasRecordsPrefixInitArg2
+epicsShareFunc void dbAliasRecordsPrefix(const char* recordPrefix, const char* aliasPrefix, int verbose)
 {
     if (!*aliasPrefix || !*recordPrefix) {
         return;
@@ -244,12 +244,12 @@ epicsShareFunc void dbAliasRecords(const char* recordPrefix, const char* aliasPr
                 std::string alias_str(aliasPrefix);
                 alias_str += (dbGetRecordName(pdbentry) + nprefix);
                 if (dbCreateAlias(pdbentry, alias_str.c_str())) {
-                    epicsPrintf("dbAliasRecords: Can't create alias %s -> %s\n", alias_str.c_str(), dbGetRecordName(pdbentry));
+                    epicsPrintf("dbAliasRecordsPrefix: Can't create alias %s -> %s\n", alias_str.c_str(), dbGetRecordName(pdbentry));
                 } else {
                     if (verbose) {
-                        epicsPrintf("dbAliasRecords: %s -> %s\n", alias_str.c_str(), dbGetRecordName(pdbentry));
+                        epicsPrintf("dbAliasRecordsPrefix: %s -> %s\n", alias_str.c_str(), dbGetRecordName(pdbentry));
                     } else if (++n % 10000 == 0) {
-                        epicsPrintf("dbAliasRecords: created %d aliases so far...\n", n);
+                        epicsPrintf("dbAliasRecordsPrefix: created %d aliases so far...\n", n);
                     }
                 }                    
             }
@@ -258,7 +258,7 @@ epicsShareFunc void dbAliasRecords(const char* recordPrefix, const char* aliasPr
         status = dbNextRecordType(pdbentry);
     }
     dbFinishEntry(pdbentry);
-    epicsPrintf("dbAliasRecords: created %d aliases\n", n);
+    epicsPrintf("dbAliasRecordsPrefix: created %d aliases\n", n);
 }
 
 /// Create an alias for all records matching regular expression \a recordMatch by replacing with \a aliasSub
@@ -338,10 +338,10 @@ static const iocshArg dbLoadRecordsListInitArg4 = { "sep", iocshArgString };			/
 static const iocshArg * const dbLoadRecordsListInitArgs[] = { &dbLoadRecordsListInitArg0, &dbLoadRecordsListInitArg1,
      &dbLoadRecordsListInitArg2, &dbLoadRecordsListInitArg3, &dbLoadRecordsListInitArg4 };
 
-static const iocshArg dbAliasRecordsInitArg0 = { "recordPrefix", iocshArgString };   ///< prefix of records that we wish to alias
-static const iocshArg dbAliasRecordsInitArg1 = { "aliasPrefix", iocshArgString };    ///< what to replace \a recordPrefix with
-static const iocshArg dbAliasRecordsInitArg2 = { "verbose", iocshArgInt };           ///< set to 1 to print out aliases created
-static const iocshArg * const dbAliasRecordsInitArgs[] = { &dbAliasRecordsInitArg0, &dbAliasRecordsInitArg1, &dbAliasRecordsInitArg2 };
+static const iocshArg dbAliasRecordsPrefixInitArg0 = { "recordPrefix", iocshArgString };   ///< prefix of records that we wish to alias
+static const iocshArg dbAliasRecordsPrefixInitArg1 = { "aliasPrefix", iocshArgString };    ///< what to replace \a recordPrefix with
+static const iocshArg dbAliasRecordsPrefixInitArg2 = { "verbose", iocshArgInt };           ///< set to 1 to print out aliases created
+static const iocshArg * const dbAliasRecordsPrefixInitArgs[] = { &dbAliasRecordsPrefixInitArg0, &dbAliasRecordsPrefixInitArg1, &dbAliasRecordsPrefixInitArg2 };
 
 static const iocshArg dbAliasRecordsREInitArg0 = { "recordMatch", iocshArgString };   ///< pattern of records that we wish to alias
 static const iocshArg dbAliasRecordsREInitArg1 = { "aliasSub", iocshArgString };      ///< what to substitute \a recordMatch with
@@ -352,7 +352,7 @@ static const iocshFuncDef dbLoadRecordsLoopDef = {"dbLoadRecordsLoop", sizeof(db
 
 static const iocshFuncDef dbLoadRecordsListDef = {"dbLoadRecordsList", sizeof(dbLoadRecordsListInitArgs) / sizeof(iocshArg*), dbLoadRecordsListInitArgs};
 
-static const iocshFuncDef dbAliasRecordsDef = {"dbAliasRecords", sizeof(dbAliasRecordsInitArgs) / sizeof(iocshArg*), dbAliasRecordsInitArgs};
+static const iocshFuncDef dbAliasRecordsPrefixDef = {"dbAliasRecordsPrefix", sizeof(dbAliasRecordsPrefixInitArgs) / sizeof(iocshArg*), dbAliasRecordsPrefixInitArgs};
 
 static const iocshFuncDef dbAliasRecordsREDef = {"dbAliasRecordsRE", sizeof(dbAliasRecordsREInitArgs) / sizeof(iocshArg*), dbAliasRecordsREInitArgs};
 
@@ -366,9 +366,9 @@ static void dbLoadRecordsListInitCallFunc(const iocshArgBuf *args)
     dbLoadRecordsList(args[0].sval, args[1].sval, args[2].sval, args[3].sval, args[4].sval);
 }
 
-static void dbAliasRecordsInitCallFunc(const iocshArgBuf *args)
+static void dbAliasRecordsPrefixInitCallFunc(const iocshArgBuf *args)
 {
-    dbAliasRecords(args[0].sval, args[1].sval, args[2].ival);
+    dbAliasRecordsPrefix(args[0].sval, args[1].sval, args[2].ival);
 }
 
 static void dbAliasRecordsREInitCallFunc(const iocshArgBuf *args)
@@ -380,7 +380,7 @@ static void dbLoadRecordsFuncsRegister(void)
 {
     iocshRegister(&dbLoadRecordsLoopDef, dbLoadRecordsLoopInitCallFunc);
     iocshRegister(&dbLoadRecordsListDef, dbLoadRecordsListInitCallFunc);
-    iocshRegister(&dbAliasRecordsDef, dbAliasRecordsInitCallFunc);
+    iocshRegister(&dbAliasRecordsPrefixDef, dbAliasRecordsPrefixInitCallFunc);
     iocshRegister(&dbAliasRecordsREDef, dbAliasRecordsREInitCallFunc);
 }
 
