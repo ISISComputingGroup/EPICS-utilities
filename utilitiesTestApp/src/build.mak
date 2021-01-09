@@ -26,6 +26,7 @@ $(APPNAME)_DBD += utilities.dbd
 # Add all the support libraries needed by this IOC
 ## ISIS standard libraries ##
 $(APPNAME)_LIBS += utilities
+$(APPNAME)_LIBS += pcrecpp pcre
 ## Add other libraries here ##
 #$(APPNAME)_LIBS += xxx
 
