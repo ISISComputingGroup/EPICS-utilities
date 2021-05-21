@@ -31,6 +31,8 @@ epicsShareFunc int freeIPPort(const char* macro);
 
 epicsShareFunc double getProcessUptime(const char* procExecutableName);
 
+epicsShareFunc int putDbAndWait(const std::string& pvName, const void *value, double timeout);
+
 #ifdef _WIN32
 #include "win32_dirent.h"
 #else
