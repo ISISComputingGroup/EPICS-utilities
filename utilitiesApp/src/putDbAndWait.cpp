@@ -10,8 +10,6 @@
 
 #include "utilities.h"
 
-// based on example of dbtpn in EPICS base dbNotify.c
-
 struct notifyCallbackInfo {
     epicsEventId callbackDone;
     DBADDR* addr;
@@ -51,20 +49,24 @@ static void putDbAndWaitDoneCallback(processNotify *ppn)
 }
 
 /// Set a PV to a value and wait \a timeout seconds for a completion callback
-/// Currently do not use this to set PVs that call back into this driver as it will just block itself and timeout
-/// releasing/reacquiring the asyn port lock around epicsEventWaitWithTimeout() did not resolve this
+/// Currently do not use this function to set PVs that call back into the same asyn driver port as it will
+/// just block itself and timeout. releasing/reacquiring the asyn port lock around epicsEventWaitWithTimeout()
+/// did not resolve this so needs more investigation
+///
 /// return 0 on success and -1 on error
+///
+/// based on example of dbtpn in EPICS base dbNotify.c
 int putDbAndWait(const std::string& pvName, const void *value, double timeout) {
     DBADDR addr;
     const char* pvname = pvName.c_str();
 
     if (dbNameToAddr(pvname, &addr)) {
-        errlogSevPrintf(errlogMajor, "Invalid PV (dbaddr) for putDbAndWait: %s", pvname);
+        errlogSevPrintf(errlogMajor, "putDbAndWait: Invalid PV (dbaddr) for %s", pvname);
         return -1;
     }
     struct dbChannel *chan = dbChannelCreate(pvname);
     if (!chan) {
-        errlogSevPrintf(errlogMajor, "Invalid PV (chan) for putDbAndWait: %s", pvname);
+        errlogSevPrintf(errlogMajor, "putDbAndWait: Invalid PV (chan) for %s", pvname);
         return -1;
     }
 
@@ -86,12 +88,11 @@ int putDbAndWait(const std::string& pvName, const void *value, double timeout) {
     epicsEventStatus event_status = epicsEventWaitWithTimeout(notifyInfo.callbackDone, timeout);
     int was_processed = procNotify.wasProcessed; // was record processed as result of write e.g. due to it being a PP field
     notifyStatus notify_status = procNotify.status;
-    dbNotifyCancel(&procNotify); // this sets status to notifyCancelled hence need copy taken above
+    dbNotifyCancel(&procNotify); // this sets procNotify.status to notifyCancelled hence need copy taken above
     epicsEventDestroy(notifyInfo.callbackDone);
     dbChannelDelete(procNotify.chan);
 
     if (event_status == epicsEventOK && notify_status == notifyOK) {
-        //errlogSevPrintf(errlogInfo,"putDbAndWait: successfully wrote to PV \"%s\" was_processed=%d", pvname, was_processed);
         return 0;
     }
 
@@ -99,10 +100,10 @@ int putDbAndWait(const std::string& pvName, const void *value, double timeout) {
     recGblSetSevr(precord, WRITE_ALARM, INVALID_ALARM);
 
     if (event_status != epicsEventOK) {
-        errlogSevPrintf(errlogMajor, "Timeout after %f seconds for putDbAndWait when attempting to set %s", timeout, pvname);
+        errlogSevPrintf(errlogMajor, "putDbAndWait: Timeout after %f seconds when attempting to set %s", timeout, pvname);
     }
     if (notify_status != notifyOK) {
-        errlogSevPrintf(errlogMajor, "Notify error %d for putDbAndWait when attempting to set %s", (int)notify_status, pvname);
+        errlogSevPrintf(errlogMajor, "putDbAndWait: Notify error %d when attempting to set %s", (int)notify_status, pvname);
     }
     return -1;
 }
