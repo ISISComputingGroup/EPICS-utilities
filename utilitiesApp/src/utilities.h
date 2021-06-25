@@ -5,6 +5,8 @@
 #include <list>
 #include <map>
 
+#include <shareLib.h>
+
 epicsShareFunc std::string epicsShareAPI setIOCName(const char* iocName);
 epicsShareFunc std::string epicsShareAPI getIOCName();
 epicsShareFunc std::string epicsShareAPI getIOCGroup();
