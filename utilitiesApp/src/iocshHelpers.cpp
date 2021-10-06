@@ -5,7 +5,14 @@
 #include "iocsh.h"
 #include "epicsExport.h"
 
-
+/// Search for PVs that match the specified pattern (as dbgrep) and put the number of found PVs in the specified macro.
+///
+/// @code
+///     countdbgrep("NUM_AXES", "*AXIS*")
+/// @endcode 
+///
+/// @param[in] resultvar The name of the macro to output the result into
+/// @param[in] pmask The pattern to search for
 long countdbgrep(const char* resultvar, const char *pmask) {
     int count = 0;
     DBENTRY dbentry;
@@ -62,12 +69,6 @@ static void ioccountdbgrepRegister(void)
 }
 
 epicsExportRegistrar(ioccountdbgrepRegister); // need to be declared via registrar() in utilities.dbd too
-
-// asub callable functions - need to be in utilities.dbd as function() 
-
-//epicsRegisterFunction(setIOCName); 
-//epicsRegisterFunction(getIOCName); 
-//epicsRegisterFunction(getIOCGroup); 
 
 }
 

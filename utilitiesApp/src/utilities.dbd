@@ -1,7 +1,7 @@
 registrar(ioccalcRegister)
 registrar(iocdcalcRegister)
 registrar(iocstringtestRegister)
-registrar(countdbgrepRegister)
+registrar(ioccountdbgrepRegister)
 registrar(iocnameRegister)
 registrar(mkdirRegister)
 registrar(dbLoadRecordsFuncsRegister)
