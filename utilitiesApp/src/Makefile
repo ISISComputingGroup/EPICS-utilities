@@ -22,7 +22,7 @@ DBD += utilities.dbd
 INC += utilities.h win32_dirent.h
 
 # specify all source files to be compiled and added to the library
-utilities_SRCS += iocname.cpp trimString.cpp ioccalc.cpp iocdcalc.cpp compress.cpp mkdir.cpp iocstringtest.cpp 
+utilities_SRCS += iocname.cpp trimString.cpp ioccalc.cpp iocdcalc.cpp compress.cpp mkdir.cpp iocstringtest.cpp iocshHelpers.cpp
 utilities_SRCS += FileList.cpp json.cpp dbLoadRecordsFuncs.cpp iocshCmdFuncs.cpp freeIPPort.cpp msgBox.cpp
 utilities_SRCS_WIN32 += win32_dirent.c getProcessUptime.cpp
 
