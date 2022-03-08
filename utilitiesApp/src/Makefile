@@ -12,7 +12,8 @@ USR_INCLUDES += -I"$(TOP)/../../../libraries/master/boost/include"
 
 LIBRARY_IOC += utilities
 
-PROD_IOC += uzhex zhex jcaput setprocessaffinity
+PROD_IOC += uzhex zhex jcaput
+PROD_IOC_WIN32 += setprocessaffinity
 
 # xxxRecord.h will be created from xxxRecord.dbd
 #DBDINC += xxxRecord
