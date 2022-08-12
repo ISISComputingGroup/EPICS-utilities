@@ -20,7 +20,7 @@ PROD_IOC_WIN32 += setprocessaffinity
 # install icpconfig.dbd into <top>/dbd
 DBD += utilities.dbd
 
-INC += utilities.h win32_dirent.h
+INC += utilities.h win32_dirent.h ibexSeqPVmacros.h
 
 # specify all source files to be compiled and added to the library
 utilities_SRCS += iocname.cpp trimString.cpp ioccalc.cpp iocdcalc.cpp compress.cpp mkdir.cpp iocstringtest.cpp iocshHelpers.cpp
