@@ -39,14 +39,23 @@ long find_calibration_range_impl(aSubRecord *prec) {
 
         std::vector<std::vector<std::string>> lines;
 
-        if (calibration_file.is_open())
+        if(!calibration_file.is_open())
         {
-            // Iterate over the lines
-            while (calibration_file.peek() != EOF)
-            {
-                lines.push_back(getNextLineAndSplitOnComma(calibration_file));
-            }
-            calibration_file.close();
+            errlogSevPrintf(errlogMajor, "%s calibration file not found", prec->name);
+            return 1;
+        }
+
+        // Iterate over the lines
+        while (calibration_file.peek() != EOF)
+        {
+            lines.push_back(getNextLineAndSplitOnComma(calibration_file));
+        }
+        calibration_file.close();
+
+        if (lines.size() < 2)
+        {
+            errlogSevPrintf(errlogMajor, "%s calibration file is incorrectly formatted", prec->name);
+            return 1;
         }
 
         //  Get highest and lowest values in the first column of the calibration file
@@ -54,11 +63,13 @@ long find_calibration_range_impl(aSubRecord *prec) {
         double high_limit = std::stod(lines[lines.size() - 1][0]);
 
         // Check the types of output values
-        if (prec->ftva != menuFtypeDOUBLE) {
+        if (prec->ftva != menuFtypeDOUBLE)
+        {
             errlogSevPrintf(errlogMajor, "%s incorrect output argument type A", prec->name);
             return 1;
         }
-        if (prec->ftvb != menuFtypeDOUBLE) {
+        if (prec->ftvb != menuFtypeDOUBLE)
+        {
             errlogSevPrintf(errlogMajor, "%s incorrect output argument type B", prec->name);
             return 1;
         }

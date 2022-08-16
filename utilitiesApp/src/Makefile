@@ -61,6 +61,8 @@ SRC_DIRS += $(TOP)/utilitiesApp/tests
 GTESTPROD_HOST += runner
 runner_SRCS += calibration_range_tests.cc
 runner_SRCS += find_calibration_range_utils.cpp
+runner_SRCS += find_calibration_range_impl.cpp
+runner_LIBS += $(EPICS_BASE_IOC_LIBS)
 GTESTS += runner 
 endif
 
