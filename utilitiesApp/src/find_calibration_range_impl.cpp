@@ -60,13 +60,13 @@ long find_calibration_range_impl(aSubRecord *prec) {
 
         if (lines[0].size() < 1)
         {
-            errlogSevPrintf(errlogMajor, "%s calibration fie does not have a low limit value", prec->name);
+            errlogSevPrintf(errlogMajor, "%s calibration file does not have a low limit value", prec->name);
             return 1;
         }
 
         if (lines[1].size() < 1)
         {
-            errlogSevPrintf(errlogMajor, "%s calibration fie does not have a high limit value", prec->name);
+            errlogSevPrintf(errlogMajor, "%s calibration file does not have a high limit value", prec->name);
             return 1;
         }
 
