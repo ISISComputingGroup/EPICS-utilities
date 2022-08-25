@@ -5,11 +5,8 @@
 #include <vector>
 #include <stdio.h>
 #include <epicsString.h>
-#include <menuFtype.h>
-#include <errlog.h>
 
 #include "gtest/gtest.h"
-#include "find_calibration_range_impl.h"
 #include "find_calibration_range_utils.h"
 
 namespace {
