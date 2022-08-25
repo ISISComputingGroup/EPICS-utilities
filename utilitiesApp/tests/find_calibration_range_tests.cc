@@ -19,7 +19,7 @@ namespace {
         aSubRecord prec;
         double valaArray[1] = { 10000.0 };
         double valbArray[1] = { 0.0 };
-        const char fileName[22] = "calibration_range.txt";
+        const char* fileName = "calibration_range.txt";
 
         void setupASubRecord()
         {
@@ -67,9 +67,6 @@ namespace {
         ASSERT_EQ(status, 0);
         ASSERT_EQ((static_cast<double*>(prec.vala))[0], 10000);
         ASSERT_EQ((static_cast<double*>(prec.valb))[0], 0);
-
-        // Clean up
-        std::remove(fileName);
     }
 
     TEST_F(FindCalibrationRangeTest, test_GIVEN_calibration_file_path_wrong_WHEN_file_read_THEN_error_status_is_returned) {
@@ -82,9 +79,6 @@ namespace {
 
         // Then:
         ASSERT_EQ(status, 1);
-
-        // Clean up
-        std::remove(fileName);
     }
 
     TEST_F(FindCalibrationRangeTest, test_GIVEN_Calibration_file_empty_WHEN_file_read_THEN_error_status_is_returned) {
@@ -96,9 +90,6 @@ namespace {
 
         // Then:
         ASSERT_EQ(status, 1);
-
-        // Clean up
-        std::remove(fileName);
     }
 
     TEST_F(FindCalibrationRangeTest, test_GIVEN_calibration_file_has_one_line_WHEN_file_read_THEN_error_status_is_returned) {
@@ -110,9 +101,6 @@ namespace {
 
         // Then:
         ASSERT_EQ(status, 1);
-
-        // Clean up
-        std::remove(fileName);
     }
 
     TEST_F(FindCalibrationRangeTest, test_GIVEN_calibration_file_missing_first_value_WHEN_file_read_THEN_error_status_is_returned) {
@@ -124,9 +112,6 @@ namespace {
 
         // Then:
         ASSERT_EQ(status, 1);
-
-        // Clean up
-        std::remove(fileName);
     }
 
     TEST_F(FindCalibrationRangeTest, test_GIVEN_calibration_file_missing_second_value_WHEN_file_read_THEN_error_status_is_returned) {
@@ -138,9 +123,6 @@ namespace {
 
         // Then:
         ASSERT_EQ(status, 1);
-
-        // Clean up
-        std::remove(fileName);
     }
 
     TEST_F(FindCalibrationRangeTest, test_GIVEN_calibration_file_values_not_numbers_WHEN_file_read_THEN_error_status_is_returned) {
@@ -152,9 +134,6 @@ namespace {
 
         // Then:
         ASSERT_EQ(status, 1);
-
-        // Clean up
-        std::remove(fileName);
     }
 
     TEST_F(FindCalibrationRangeTest, test_GIVEN_incorrect_arg_type_fta_WHEN_file_read_THEN_error_status_is_returned) {
@@ -167,9 +146,6 @@ namespace {
 
         // Then:
         ASSERT_EQ(status, 1);
-
-        // Clean up
-        std::remove(fileName);
     }
 
     TEST_F(FindCalibrationRangeTest, test_GIVEN_incorrect_arg_type_ftb_WHEN_file_read_THEN_error_status_is_returned) {
@@ -182,9 +158,6 @@ namespace {
 
         // Then:
         ASSERT_EQ(status, 1);
-
-        // Clean up
-        std::remove(fileName);
     }
 
     TEST_F(FindCalibrationRangeTest, test_GIVEN_incorrect_arg_type_ftc_WHEN_file_read_THEN_error_status_is_returned) {
@@ -197,9 +170,6 @@ namespace {
 
         // Then:
         ASSERT_EQ(status, 1);
-
-        // Clean up
-        std::remove(fileName);
     }
 
     TEST_F(FindCalibrationRangeTest, test_GIVEN_incorrect_arg_type_ftva_WHEN_file_read_THEN_error_status_is_returned) {
@@ -212,9 +182,6 @@ namespace {
 
         // Then:
         ASSERT_EQ(status, 1);
-
-        // Clean up
-        std::remove(fileName);
     }
 
     TEST_F(FindCalibrationRangeTest, test_GIVEN_incorrect_arg_type_ftvb_WHEN_file_read_THEN_error_status_is_returned) {
@@ -227,8 +194,5 @@ namespace {
 
         // Then:
         ASSERT_EQ(status, 1);
-
-        // Clean up
-        std::remove(fileName);
     }
 }
