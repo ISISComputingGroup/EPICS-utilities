@@ -14,7 +14,7 @@
 
 namespace {
 
-    class CalRangeTest : public ::testing::Test {
+    class FindCalibrationRangeTest : public ::testing::Test {
     protected:
         aSubRecord prec;
         double valaArray[1] = { 10000.0 };
@@ -56,7 +56,7 @@ namespace {
         }
     };
 
-    TEST_F(CalRangeTest, reads_in_calibration_range) {
+    TEST_F(FindCalibrationRangeTest, test_GIVEN_valid_calibration_file_WHEN_file_read_THEN_range_set) {
         // Given
         createCalibrationFile();
 
@@ -72,7 +72,7 @@ namespace {
         std::remove(fileName);
     }
 
-    TEST_F(CalRangeTest, handles_incorrect_file_location) {
+    TEST_F(FindCalibrationRangeTest, test_GIVEN_calibration_file_path_wrong_WHEN_file_read_THEN_error_status_is_returned) {
         // Given
         prec.c = "Wrong.txt";
         createCalibrationFile();
@@ -87,7 +87,7 @@ namespace {
         std::remove(fileName);
     }
 
-    TEST_F(CalRangeTest, reject_empty_file) {
+    TEST_F(FindCalibrationRangeTest, test_GIVEN_Calibration_file_empty_WHEN_file_read_THEN_error_status_is_returned) {
         // Given
         createCalibrationFile("");
 
@@ -101,7 +101,7 @@ namespace {
         std::remove(fileName);
     }
 
-    TEST_F(CalRangeTest, reject_empty_only_one_line) {
+    TEST_F(FindCalibrationRangeTest, test_GIVEN_calibration_file_has_one_line_WHEN_file_read_THEN_error_status_is_returned) {
         // Given
         createCalibrationFile("0.0");
 
@@ -115,7 +115,7 @@ namespace {
         std::remove(fileName);
     }
 
-    TEST_F(CalRangeTest, reject_empty_first_line) {
+    TEST_F(FindCalibrationRangeTest, test_GIVEN_calibration_file_missing_first_value_WHEN_file_read_THEN_error_status_is_returned) {
         // Given
         createCalibrationFile("\n10000.0");
 
@@ -129,7 +129,7 @@ namespace {
         std::remove(fileName);
     }
 
-    TEST_F(CalRangeTest, reject_empty_second_line) {
+    TEST_F(FindCalibrationRangeTest, test_GIVEN_calibration_file_missing_second_value_WHEN_file_read_THEN_error_status_is_returned) {
         // Given
         createCalibrationFile("0.0\n");
 
@@ -143,7 +143,7 @@ namespace {
         std::remove(fileName);
     }
 
-    TEST_F(CalRangeTest, reject_non_numbers) {
+    TEST_F(FindCalibrationRangeTest, test_GIVEN_calibration_file_values_not_numbers_WHEN_file_read_THEN_error_status_is_returned) {
         // Given
         createCalibrationFile("test\ntest");
 
@@ -157,7 +157,7 @@ namespace {
         std::remove(fileName);
     }
 
-    TEST_F(CalRangeTest, reject_incorrect_arg_type_fta) {
+    TEST_F(FindCalibrationRangeTest, test_GIVEN_incorrect_arg_type_fta_WHEN_file_read_THEN_error_status_is_returned) {
         // Given
         prec.fta = menuFtypeDOUBLE;
         createCalibrationFile();
@@ -172,7 +172,7 @@ namespace {
         std::remove(fileName);
     }
 
-    TEST_F(CalRangeTest, reject_incorrect_arg_type_ftb) {
+    TEST_F(FindCalibrationRangeTest, test_GIVEN_incorrect_arg_type_ftb_WHEN_file_read_THEN_error_status_is_returned) {
         // Given
         prec.ftb = menuFtypeDOUBLE;
         createCalibrationFile();
@@ -187,7 +187,7 @@ namespace {
         std::remove(fileName);
     }
 
-    TEST_F(CalRangeTest, reject_incorrect_arg_type_ftc) {
+    TEST_F(FindCalibrationRangeTest, test_GIVEN_incorrect_arg_type_ftc_WHEN_file_read_THEN_error_status_is_returned) {
         // Given
         prec.ftc = menuFtypeDOUBLE;
         createCalibrationFile();
@@ -202,7 +202,7 @@ namespace {
         std::remove(fileName);
     }
 
-    TEST_F(CalRangeTest, reject_incorrect_arg_type_ftva) {
+    TEST_F(FindCalibrationRangeTest, test_GIVEN_incorrect_arg_type_ftva_WHEN_file_read_THEN_error_status_is_returned) {
         // Given
         prec.ftva = menuFtypeSTRING;
         createCalibrationFile();
@@ -217,7 +217,7 @@ namespace {
         std::remove(fileName);
     }
 
-    TEST_F(CalRangeTest, reject_incorrect_arg_type_ftvb) {
+    TEST_F(FindCalibrationRangeTest, test_GIVEN_incorrect_arg_type_ftvb_WHEN_file_read_THEN_error_status_is_returned) {
         // Given
         prec.ftvb = menuFtypeSTRING;
         createCalibrationFile();
