@@ -27,8 +27,8 @@ namespace {
             prec.fta = menuFtypeSTRING;
             prec.ftb = menuFtypeSTRING;
             prec.ftc = menuFtypeSTRING;
-            prec.a = ".";
-            prec.b = ".";
+            prec.a = (void*)".";
+            prec.b = (void*)".";
             prec.c = (void*)fileName;
             prec.ftva = menuFtypeDOUBLE;
             prec.ftvb = menuFtypeDOUBLE;
