@@ -27,8 +27,8 @@ namespace {
             prec.fta = menuFtypeSTRING;
             prec.ftb = menuFtypeSTRING;
             prec.ftc = menuFtypeSTRING;
-            prec.a = ".";
-            prec.b = ".";
+            prec.a = (void*)".";
+            prec.b = (void*)".";
             prec.c = (void*)fileName;
             prec.ftva = menuFtypeDOUBLE;
             prec.ftvb = menuFtypeDOUBLE;
@@ -71,7 +71,7 @@ namespace {
 
     TEST_F(FindCalibrationRangeTest, test_GIVEN_calibration_file_path_wrong_WHEN_file_read_THEN_error_status_is_returned) {
         // Given
-        prec.c = "Wrong.txt";
+        prec.c = (void*)"Wrong.txt";
         createCalibrationFile();
 
         // When:
