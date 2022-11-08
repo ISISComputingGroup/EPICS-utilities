@@ -49,6 +49,7 @@
 #include <epicsExport.h>
 
 #include "utilities.h"
+#include <regex>
 
 /// load current environment into mac handle 
 static void loadMacEnviron(MAC_HANDLE* pmh)
@@ -66,26 +67,25 @@ static void loadMacEnviron(MAC_HANDLE* pmh)
 	}
 }
 
-/// look for e.g. \$(I) and replace with $(I) so we can substitute later with macEnvExpand()
+/// look for e.g. \$() and replace with $() so we can substitute later with macEnvExpand()
 static void subMacros(std::string& new_macros, const char* macros, const char* loopVar)
 {
-    char loopSubFrom[32], loopSubTo[32];
-    epicsSnprintf(loopSubFrom, sizeof(loopSubFrom), "\\$(%s)", loopVar);
-    epicsSnprintf(loopSubTo, sizeof(loopSubTo), "$(%s)", loopVar);
     new_macros = macros;
-    size_t start_pos = 0, lf = strlen(loopSubFrom), lt = strlen(loopSubTo);
-    while( (start_pos = new_macros.find(loopSubFrom, start_pos)) != std::string::npos ) 
-    {
-        new_macros.replace(start_pos, lf, loopSubTo);
-        start_pos += lt;
+    std::smatch m;
+    int i =0;
+    while((!m.empty())||(!m.ready())){
+        i++;
+        std::regex_search(new_macros, m, std::regex(R"(\\\$\(([0-9a-zA-Z_\$\(\){}]+)\))"));
+        std::cout << "iteration " << i << " macros: " << new_macros << " size: " << m.size() << " m0" << m[0] <<"\n";
+        new_macros = std::regex_replace(new_macros, std::regex(R"(\\\$\(([0-9a-zA-Z_\$\(\){}]+)\))"), "$($1)");
     }
-    epicsSnprintf(loopSubFrom, sizeof(loopSubFrom), "\\${%s}", loopVar);
-    epicsSnprintf(loopSubTo, sizeof(loopSubTo), "${%s}", loopVar);
-	start_pos = 0;
-    while( (start_pos = new_macros.find(loopSubFrom, start_pos)) != std::string::npos ) 
-    {
-        new_macros.replace(start_pos, lf, loopSubTo);
-        start_pos += lt;
+    i=0;
+    // Have to look twice to guarantee that brackets/curly braces are properly matched.
+    while((!m.empty())||(!m.ready())){
+        i++;
+        std::regex_search(new_macros, m, std::regex(R"(\\\${([0-9a-zA-Z_\$\(\){}]+)})"));
+        std::cout << "iteration " << i << " macros: " << new_macros << " size: " << m.size() << " m0" << m[0] <<"\n";
+        new_macros = std::regex_replace(new_macros, std::regex(R"(\\\${([0-9a-zA-Z_\$\(\){}]+)})"), "$($1)");
     }
 }
 
