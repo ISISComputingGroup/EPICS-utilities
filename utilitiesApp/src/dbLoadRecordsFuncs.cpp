@@ -71,21 +71,14 @@ static void loadMacEnviron(MAC_HANDLE* pmh)
 static void subMacros(std::string& new_macros, const char* macros, const char* loopVar)
 {
     new_macros = macros;
-    std::smatch m;
-    int i =0;
-    while((!m.empty())||(!m.ready())){
-        i++;
-        std::regex_search(new_macros, m, std::regex(R"(\\\$\(([0-9a-zA-Z_\$\(\){}]+)\))"));
-        std::cout << "iteration " << i << " macros: " << new_macros << " size: " << m.size() << " m0" << m[0] <<"\n";
+    std::smatch bracketSearch, braceSearch;
+    // Check that we have done a search, and that the result of both is empty before finishing.
+    while((!bracketSearch.empty())||(!braceSearch.empty())||(!bracketSearch.ready())){
+        std::regex_search(new_macros, bracketSearch, std::regex(R"(\\\$\(([0-9a-zA-Z_\$\(\){}]+)\))"));
         new_macros = std::regex_replace(new_macros, std::regex(R"(\\\$\(([0-9a-zA-Z_\$\(\){}]+)\))"), "$($1)");
-    }
-    i=0;
-    // Have to look twice to guarantee that brackets/curly braces are properly matched.
-    while((!m.empty())||(!m.ready())){
-        i++;
-        std::regex_search(new_macros, m, std::regex(R"(\\\${([0-9a-zA-Z_\$\(\){}]+)})"));
-        std::cout << "iteration " << i << " macros: " << new_macros << " size: " << m.size() << " m0" << m[0] <<"\n";
-        new_macros = std::regex_replace(new_macros, std::regex(R"(\\\${([0-9a-zA-Z_\$\(\){}]+)})"), "$($1)");
+        // Have to look twice to guarantee that brackets/curly braces are properly matched.
+        std::regex_search(new_macros, braceSearch, std::regex(R"(\\\$\{([0-9a-zA-Z_\$\(\){}]+)\})"));
+        new_macros = std::regex_replace(new_macros, std::regex(R"(\\\$\{([0-9a-zA-Z_\$\(\){}]+)\})"), "$($1)");
     }
 }
 
