@@ -44,12 +44,12 @@
 #include "pcrecpp.h"
 
 #include <string.h>
+#include <regex>
 #include <registryFunction.h>
 
 #include <epicsExport.h>
 
 #include "utilities.h"
-#include <regex>
 
 /// load current environment into mac handle 
 static void loadMacEnviron(MAC_HANDLE* pmh)
