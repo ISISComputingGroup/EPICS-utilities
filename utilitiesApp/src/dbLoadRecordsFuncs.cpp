@@ -68,7 +68,7 @@ static void loadMacEnviron(MAC_HANDLE* pmh)
 }
 
 /// look for e.g. \$() and replace with $() so we can substitute later with macEnvExpand()
-static void subMacros(std::string& new_macros, const char* macros, const char* loopVar)
+static void subMacros(std::string& new_macros, const char* macros)
 {
     new_macros = macros;
     std::smatch bracketSearch, braceSearch;
@@ -116,8 +116,8 @@ epicsShareFunc void dbLoadRecordsLoop(const char* dbFile, const char* macros, co
         step = 1;
     }
     std::string macros_s, dbFile_s;
-    subMacros(macros_s, macros, loopVar);
-    subMacros(dbFile_s, dbFile, loopVar);
+    subMacros(macros_s, macros);
+    subMacros(dbFile_s, dbFile);
     MAC_HANDLE* mh = NULL;
 	char macros_exp[1024], dbFile_exp[1024];
     macCreateHandle(&mh, NULL);
@@ -171,8 +171,8 @@ epicsShareFunc void dbLoadRecordsList(const char* dbFile, const char* macros, co
 		sep = default_sep;
 	}
     std::string macros_s, dbFile_s;
-    subMacros(macros_s, macros, loopVar);
-    subMacros(dbFile_s, dbFile, loopVar);
+    subMacros(macros_s, macros);
+    subMacros(dbFile_s, dbFile);
     MAC_HANDLE* mh = NULL;
 	char macros_exp[1024], dbFile_exp[1024];
     macCreateHandle(&mh, NULL);
