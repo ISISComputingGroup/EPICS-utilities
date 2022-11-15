@@ -70,15 +70,17 @@ static void loadMacEnviron(MAC_HANDLE* pmh)
 /// look for e.g. \$() and replace with $() so we can substitute later with macEnvExpand()
 static void subMacros(std::string& new_macros, const char* macros)
 {
+    const std::regex bracketPattern = std::regex(R"(\\\$\(([0-9a-zA-Z_$(){}]+)\))")
+    const std::regex bracePattern = std::regex(R"(\\\$\{([0-9a-zA-Z_$(){}]+)\})")
     new_macros = macros;
     std::smatch bracketSearch, braceSearch;
     // Check that we have done a search, and that the result of both is empty before finishing.
     while((!bracketSearch.empty())||(!braceSearch.empty())||(!bracketSearch.ready())){
-        std::regex_search(new_macros, bracketSearch, std::regex(R"(\\\$\(([0-9a-zA-Z_\$\(\){}]+)\))"));
-        new_macros = std::regex_replace(new_macros, std::regex(R"(\\\$\(([0-9a-zA-Z_\$\(\){}]+)\))"), "$($1)");
+        std::regex_search(new_macros, bracketSearch, bracketPattern);
+        new_macros = std::regex_replace(new_macros, bracketPattern, "$($1)");
         // Have to look twice to guarantee that brackets/curly braces are properly matched.
-        std::regex_search(new_macros, braceSearch, std::regex(R"(\\\$\{([0-9a-zA-Z_\$\(\){}]+)\})"));
-        new_macros = std::regex_replace(new_macros, std::regex(R"(\\\$\{([0-9a-zA-Z_\$\(\){}]+)\})"), "$($1)");
+        std::regex_search(new_macros, braceSearch, bracePattern);
+        new_macros = std::regex_replace(new_macros, bracePattern, "${$1}");
     }
 }
 
