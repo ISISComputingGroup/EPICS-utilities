@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
         return 1;
     }
     const char* file = argv[1];
-    DWORD mask = atoll(argv[2]);
+    DWORD mask = atol(argv[2]);
     LOADED_IMAGE li;
     if (MapAndLoad(file, "\\nosearch", &li, 0, 0) == 0)
     {
