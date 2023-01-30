@@ -44,6 +44,7 @@
 #include "pcrecpp.h"
 
 #include <string.h>
+#include <regex>
 #include <registryFunction.h>
 
 #include <epicsExport.h>
@@ -66,26 +67,20 @@ static void loadMacEnviron(MAC_HANDLE* pmh)
 	}
 }
 
-/// look for e.g. \$(I) and replace with $(I) so we can substitute later with macEnvExpand()
-static void subMacros(std::string& new_macros, const char* macros, const char* loopVar)
+/// look for e.g. \$() and replace with $() so we can substitute later with macEnvExpand()
+void subMacros(std::string& new_macros, const char* macros)
 {
-    char loopSubFrom[32], loopSubTo[32];
-    epicsSnprintf(loopSubFrom, sizeof(loopSubFrom), "\\$(%s)", loopVar);
-    epicsSnprintf(loopSubTo, sizeof(loopSubTo), "$(%s)", loopVar);
+    const std::regex bracketPattern = std::regex(R"(\\\$\(([0-9a-zA-Z_$(){}]+)\))");
+    const std::regex bracePattern = std::regex(R"(\\\$\{([0-9a-zA-Z_$(){}]+)\})");
     new_macros = macros;
-    size_t start_pos = 0, lf = strlen(loopSubFrom), lt = strlen(loopSubTo);
-    while( (start_pos = new_macros.find(loopSubFrom, start_pos)) != std::string::npos ) 
-    {
-        new_macros.replace(start_pos, lf, loopSubTo);
-        start_pos += lt;
-    }
-    epicsSnprintf(loopSubFrom, sizeof(loopSubFrom), "\\${%s}", loopVar);
-    epicsSnprintf(loopSubTo, sizeof(loopSubTo), "${%s}", loopVar);
-	start_pos = 0;
-    while( (start_pos = new_macros.find(loopSubFrom, start_pos)) != std::string::npos ) 
-    {
-        new_macros.replace(start_pos, lf, loopSubTo);
-        start_pos += lt;
+    std::smatch bracketSearch, braceSearch;
+    // Check that we have done a search, and that the result of both is empty before finishing.
+    while((!bracketSearch.empty())||(!braceSearch.empty())||(!bracketSearch.ready())){
+        std::regex_search(new_macros, bracketSearch, bracketPattern);
+        new_macros = std::regex_replace(new_macros, bracketPattern, "$($1)");
+        // Have to look twice to guarantee that brackets/curly braces are properly matched.
+        std::regex_search(new_macros, braceSearch, bracePattern);
+        new_macros = std::regex_replace(new_macros, bracePattern, "${$1}");
     }
 }
 
@@ -123,8 +118,8 @@ epicsShareFunc void dbLoadRecordsLoop(const char* dbFile, const char* macros, co
         step = 1;
     }
     std::string macros_s, dbFile_s;
-    subMacros(macros_s, macros, loopVar);
-    subMacros(dbFile_s, dbFile, loopVar);
+    subMacros(macros_s, macros);
+    subMacros(dbFile_s, dbFile);
     MAC_HANDLE* mh = NULL;
 	char macros_exp[1024], dbFile_exp[1024];
     macCreateHandle(&mh, NULL);
@@ -178,8 +173,8 @@ epicsShareFunc void dbLoadRecordsList(const char* dbFile, const char* macros, co
 		sep = default_sep;
 	}
     std::string macros_s, dbFile_s;
-    subMacros(macros_s, macros, loopVar);
-    subMacros(dbFile_s, dbFile, loopVar);
+    subMacros(macros_s, macros);
+    subMacros(dbFile_s, dbFile);
     MAC_HANDLE* mh = NULL;
 	char macros_exp[1024], dbFile_exp[1024];
     macCreateHandle(&mh, NULL);
