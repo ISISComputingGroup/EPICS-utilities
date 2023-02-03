@@ -49,26 +49,14 @@ jcaput_LIBS += $(EPICS_BASE_IOC_LIBS)
 setprocessaffinity_SRCS += setprocessaffinity.cpp
 setprocessaffinity_SYS_LIBS_WIN32 += imagehlp
 
-# Copy DLLs that executables depend on, this avoids having to put additional things into PATH in config_env 
+# Copy DLLs that executables depend on, this avoids having to put additional things into PATH in config_env
+# these are also needed for running google tests in tests directory
 BIN_INSTALLS_WIN32 += $(wildcard $(ZLIB)/bin/$(EPICS_HOST_ARCH)/*.dll)
 BIN_INSTALLS_WIN32 += $(wildcard $(LIBJSON)/bin/$(EPICS_HOST_ARCH)/*.dll)
 BIN_INSTALLS_WIN32 += $(wildcard $(PCRE)/bin/$(EPICS_HOST_ARCH)/*.dll)
-
-# googleTest Runner
-ifeq ($(findstring 10.0,$(VCVERSION)),)
-SRC_DIRS += $(TOP)/utilitiesApp/tests
-
-GTESTPROD_HOST += runner
-runner_SRCS += calibration_range_tests.cc find_calibration_range_tests.cc dbLoadRecordsFuncs_tests.cc
-runner_SRCS += find_calibration_range_utils.cpp find_calibration_range_impl.cpp dbLoadRecordsFuncs.cpp
-runner_LIBS += zlib pcrecpp pcre libjson
-runner_LIBS += $(EPICS_BASE_IOC_LIBS)
-GTESTS += runner 
-endif
 
 #===========================
 
 include $(TOP)/configure/RULES
 #----------------------------------------
 #  ADD RULES AFTER THIS LINE
--include $(GTEST)/cfg/compat.RULES_BUILD
