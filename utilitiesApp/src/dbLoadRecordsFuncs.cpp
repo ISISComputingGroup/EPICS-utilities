@@ -77,10 +77,10 @@ void subMacros(std::string& new_macros, const char* macros)
     // Check that we have done a search, and that the result of both is empty before finishing.
     while((!bracketSearch.empty())||(!braceSearch.empty())||(!bracketSearch.ready())){
         std::regex_search(new_macros, bracketSearch, bracketPattern);
-        new_macros = std::regex_replace(new_macros, bracketPattern, "$($1)");
+        new_macros = std::regex_replace(new_macros, bracketPattern, std::string("$($1)"));
         // Have to look twice to guarantee that brackets/curly braces are properly matched.
         std::regex_search(new_macros, braceSearch, bracePattern);
-        new_macros = std::regex_replace(new_macros, bracePattern, "${$1}");
+        new_macros = std::regex_replace(new_macros, bracePattern, std::string("${$1}"));
     }
 }
 
