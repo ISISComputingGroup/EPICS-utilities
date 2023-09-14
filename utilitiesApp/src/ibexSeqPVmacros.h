@@ -171,6 +171,16 @@
     pvPut(_VAR_);		\
   }
 
+/*
+ * pv put with sync/async flag
+ */
+#define PVPUTF(_VAR_,_EXPR_,_FLAG_)	\
+  {				\
+    _VAR_ = ( _EXPR_ );		\
+    pvPut(_VAR_,_FLAG_);		\
+  }
+
+
 /*----------------------------------------------------------------
  * PVPUTSTR() -- string assign and pvPut() in one
  *
