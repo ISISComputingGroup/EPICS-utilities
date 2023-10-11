@@ -17,6 +17,7 @@ DB += field_setter.template
 DB += calibration_range.db
 DB += check_stability.db
 DB += simple_val.db
+DB += disable_pv_puts.db
 
 #----------------------------------------------------
 # If <anyname>.db template is not named <anyname>*.template add
