@@ -1,10 +1,10 @@
-# This db checks the run state and manager mode and locks the PVs supplied in macros OUT1-OUT8
+# This db checks the run state and manager mode and locks the PVs supplied in macros PV1-PV8
 # via their .DISP field to disable db puts when not in manager mode or when an experiment is running
 
 # Macros
 # 
 # P - prefix
-# OUT1-OUT8 - PV macros for which puts should be disabled
+# PV1-PV8 - PV macros for which puts should be disabled
 
 record(calc, "$(P)_RUN_MAN_MON") {
     field(DESC, "Check run state and manager mode")
@@ -17,14 +17,14 @@ record(calc, "$(P)_RUN_MAN_MON") {
 record(dfanout, "$(P)_LOCK") {
     field(DESC, "Toggle lock for PV puts")
     field(SELM, "All")
-    field(OUTA, "$(OUT1=$(P)_DUMMY_ACTION).DISP PP")
-    field(OUTB, "$(OUT2=$(P)_DUMMY_ACTION).DISP PP")
-    field(OUTC, "$(OUT3=$(P)_DUMMY_ACTION).DISP PP")
-    field(OUTD, "$(OUT4=$(P)_DUMMY_ACTION).DISP PP")
-    field(OUTE, "$(OUT5=$(P)_DUMMY_ACTION).DISP PP")
-    field(OUTF, "$(OUT6=$(P)_DUMMY_ACTION).DISP PP")
-    field(OUTG, "$(OUT7=$(P)_DUMMY_ACTION).DISP PP")
-    field(OUTH, "$(OUT8=$(P)_DUMMY_ACTION).DISP PP")
+    field(OUTA, "$(PV1=$(P)_DUMMY_ACTION).DISP PP")
+    field(OUTB, "$(PV2=$(P)_DUMMY_ACTION).DISP PP")
+    field(OUTC, "$(PV3=$(P)_DUMMY_ACTION).DISP PP")
+    field(OUTD, "$(PV4=$(P)_DUMMY_ACTION).DISP PP")
+    field(OUTE, "$(PV5=$(P)_DUMMY_ACTION).DISP PP")
+    field(OUTF, "$(PV6=$(P)_DUMMY_ACTION).DISP PP")
+    field(OUTG, "$(PV7=$(P)_DUMMY_ACTION).DISP PP")
+    field(OUTH, "$(PV8=$(P)_DUMMY_ACTION).DISP PP")
     field(DOL,  "$(P)_RUN_MAN_MON")
     field(OMSL, "closed_loop")
 }
