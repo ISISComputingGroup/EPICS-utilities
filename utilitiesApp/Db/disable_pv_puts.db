@@ -1,6 +1,9 @@
 # This db checks the run state and manager mode and locks the PVs supplied in macros PV1-PV8
 # via their .DISP field to disable db puts when not in manager mode or when an experiment is running
-
+# 
+# Example usage in a st-common.cmd:
+# dbLoadRecords("$(UTILITIES)/db/disable_pv_puts.db", "INST=$(MYPVPREFIX),P=$(MYPVPREFIX)$(IOCNAME):,PV1=$(MYPVPREFIX)$(IOCNAME):<pv to be locked>,PV2=...,PV3=...PV8=...")
+#
 # Macros
 # 
 # P - prefix
