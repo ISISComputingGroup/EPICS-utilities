@@ -4,6 +4,8 @@
 # Example usage in a st-common.cmd:
 # dbLoadRecords("$(UTILITIES)/db/disable_pv_puts.db", "INST=$(MYPVPREFIX),P=$(MYPVPREFIX)$(IOCNAME):,PV1=$(MYPVPREFIX)$(IOCNAME):<pv to be locked>,PV2=...,PV3=...PV8=...")
 #
+# Note! This enforces the lock ( you can't change PVs DISP from 1 to 0 from outside)
+#
 # Macros
 # 
 # P - prefix
@@ -20,17 +22,92 @@ record(calc, "$(P)_RUN_MAN_MON") {
 record(dfanout, "$(P)_LOCK") {
     field(DESC, "Toggle lock for PV puts")
     field(SELM, "All")
-    field(OUTA, "$(PV1=$(P)_DUMMY_ACTION).DISP PP")
-    field(OUTB, "$(PV2=$(P)_DUMMY_ACTION).DISP PP")
-    field(OUTC, "$(PV3=$(P)_DUMMY_ACTION).DISP PP")
-    field(OUTD, "$(PV4=$(P)_DUMMY_ACTION).DISP PP")
-    field(OUTE, "$(PV5=$(P)_DUMMY_ACTION).DISP PP")
-    field(OUTF, "$(PV6=$(P)_DUMMY_ACTION).DISP PP")
-    field(OUTG, "$(PV7=$(P)_DUMMY_ACTION).DISP PP")
-    field(OUTH, "$(PV8=$(P)_DUMMY_ACTION).DISP PP")
+    field(OUTA, "$(PV1=$(P)_DUMMY_ACTION).DISP")
+    field(OUTB, "$(PV2=$(P)_DUMMY_ACTION).DISP")
+    field(OUTC, "$(PV3=$(P)_DUMMY_ACTION).DISP")
+    field(OUTD, "$(PV4=$(P)_DUMMY_ACTION).DISP")
+    field(OUTE, "$(PV5=$(P)_DUMMY_ACTION).DISP")
+    field(OUTF, "$(PV6=$(P)_DUMMY_ACTION).DISP")
+    field(OUTG, "$(PV7=$(P)_DUMMY_ACTION).DISP")
+    field(OUTH, "$(PV8=$(P)_DUMMY_ACTION).DISP")
     field(DOL,  "$(P)_RUN_MAN_MON")
     field(OMSL, "closed_loop")
 }
 
 record(bo, "$(P)_DUMMY_ACTION") {
+}
+
+# Enforcing lock logic below
+# Prevent outside to change DISP from 1 to 0
+
+record(calcout, "$(P)_PV1_CHECK") {
+    field(DESC, "Check if DISP changed from outside")
+    field(INPA, "$(PV1=$(P)_DUMMY_ACTION).DISP CP")
+    field(INPB, "$(P)_RUN_MAN_MON")
+    field(CALC, "A # B && B # 0") # Enforce lock only (let otside lock when this does not lock)
+    field(OOPT, "When Non-zero")
+    field(OUT, "$(PV1=$(P)_DUMMY_ACTION).DISP")
+}
+
+record(calcout, "$(P)_PV2_CHECK") {
+    field(DESC, "Check if DISP changed from outside")
+    field(INPA, "$(PV2=$(P)_DUMMY_ACTION).DISP CP")
+    field(INPB, "$(P)_RUN_MAN_MON")
+    field(CALC, "A # B && B # 0") # Enforce lock only (let otside lock when this does not lock)
+    field(OOPT, "When Non-zero")
+    field(OUT, "$(PV2=$(P)_DUMMY_ACTION).DISP")
+}
+
+record(calcout, "$(P)_PV3_CHECK") {
+    field(DESC, "Check if DISP changed from outside")
+    field(INPA, "$(PV3=$(P)_DUMMY_ACTION).DISP CP")
+    field(INPB, "$(P)_RUN_MAN_MON")
+    field(CALC, "A # B && B # 0") # Enforce lock only (let otside lock when this does not lock)
+    field(OOPT, "When Non-zero")
+    field(OUT, "$(PV3=$(P)_DUMMY_ACTION).DISP")
+}
+
+record(calcout, "$(P)_PV4_CHECK") {
+    field(DESC, "Check if DISP changed from outside")
+    field(INPA, "$(PV4=$(P)_DUMMY_ACTION).DISP CP")
+    field(INPB, "$(P)_RUN_MAN_MON")
+    field(CALC, "A # B && B # 0") # Enforce lock only (let otside lock when this does not lock)
+    field(OOPT, "When Non-zero")
+    field(OUT, "$(PV4=$(P)_DUMMY_ACTION).DISP")
+}
+
+record(calcout, "$(P)_PV5_CHECK") {
+    field(DESC, "Check if DISP changed from outside")
+    field(INPA, "$(PV5=$(P)_DUMMY_ACTION).DISP CP")
+    field(INPB, "$(P)_RUN_MAN_MON")
+    field(CALC, "A # B && B # 0") # Enforce lock only (let otside lock when this does not lock)
+    field(OOPT, "When Non-zero")
+    field(OUT, "$(PV5=$(P)_DUMMY_ACTION).DISP")
+}
+
+record(calcout, "$(P)_PV6_CHECK") {
+    field(DESC, "Check if DISP changed from outside")
+    field(INPA, "$(PV6=$(P)_DUMMY_ACTION).DISP CP")
+    field(INPB, "$(P)_RUN_MAN_MON")
+    field(CALC, "A # B && B # 0") # Enforce lock only (let otside lock when this does not lock)
+    field(OOPT, "When Non-zero")
+    field(OUT, "$(PV6=$(P)_DUMMY_ACTION).DISP")
+}
+
+record(calcout, "$(P)_PV7_CHECK") {
+    field(DESC, "Check if DISP changed from outside")
+    field(INPA, "$(PV7=$(P)_DUMMY_ACTION).DISP CP")
+    field(INPB, "$(P)_RUN_MAN_MON")
+    field(CALC, "A # B && B # 0") # Enforce lock only (let otside lock when this does not lock)
+    field(OOPT, "When Non-zero")
+    field(OUT, "$(PV7=$(P)_DUMMY_ACTION).DISP")
+}
+
+record(calcout, "$(P)_PV8_CHECK") {
+    field(DESC, "Check if DISP changed from outside")
+    field(INPA, "$(PV8=$(P)_DUMMY_ACTION).DISP CP")
+    field(INPB, "$(P)_RUN_MAN_MON")
+    field(CALC, "A # B && B # 0") # Enforce lock only (let otside lock when this does not lock)
+    field(OOPT, "When Non-zero")
+    field(OUT, "$(PV8=$(P)_DUMMY_ACTION).DISP")
 }
