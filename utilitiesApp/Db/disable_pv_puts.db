@@ -12,10 +12,9 @@
 # PV1-PV8 - PV macros for which puts should be disabled
 
 record(calc, "$(P)_RUN_MAN_MON") {
-    field(DESC, "Check run state and manager mode")
+    field(DESC, "Check runstate is anything but SETUP")
     field(INPA, "$(INST)DAE:RUNSTATE CP") #isisdae ioc
-    field(INPB, "$(INST)CS:MANAGER CP") # instetc ioc
-    field(CALC, "A#1||B=0")
+    field(CALC, "A#1")
     field(FLNK, "$(P)_LOCK")
 }
 
