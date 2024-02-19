@@ -1,5 +1,5 @@
-# This db checks the run state and manager mode and locks the PVs supplied in macros PV1-PV8
-# via their .DISP field to disable db puts when not in manager mode or when an experiment is running
+# This db checks the run state and locks the PVs supplied in macros PV1-PV8
+# via their .DISP field to disable db puts when an experiment is running i.e. dae is not in setup state
 # 
 # Example usage in a st-common.cmd:
 # dbLoadRecords("$(UTILITIES)/db/disable_pv_puts.db", "INST=$(MYPVPREFIX),P=$(MYPVPREFIX)$(IOCNAME):,PV1=$(MYPVPREFIX)$(IOCNAME):<pv to be locked>,PV2=...,PV3=...PV8=...")
@@ -11,13 +11,17 @@
 # P - prefix
 # PV1-PV8 - PV macros for which puts should be disabled
 
-record(calc, "$(P)_RUN_MAN_MON") {
-    field(DESC, "Check run state and manager mode")
+record(calc, "$(P)_RUN_STATE_MON") {
+    field(DESC, "Check runstate is anything but SETUP")
     field(INPA, "$(INST)DAE:RUNSTATE CP") #isisdae ioc
-    field(INPB, "$(INST)CS:MANAGER CP") # instetc ioc
-    field(CALC, "A#1||B=0")
+    field(CALC, "A#1") # 1 is mode SETUP
     field(FLNK, "$(P)_LOCK")
 }
+
+# For backwards compatibility, it used to represent Run and Manager Mode Monitor
+# Not it is only a Run State Monitor
+alias("$(P)_RUN_STATE_MON", "$(P)_RUN_MAN_MON")
+
 
 record(dfanout, "$(P)_LOCK") {
     field(DESC, "Toggle lock for PV puts")
@@ -30,7 +34,7 @@ record(dfanout, "$(P)_LOCK") {
     field(OUTF, "$(PV6=$(P)_DUMMY_ACTION).DISP")
     field(OUTG, "$(PV7=$(P)_DUMMY_ACTION).DISP")
     field(OUTH, "$(PV8=$(P)_DUMMY_ACTION).DISP")
-    field(DOL,  "$(P)_RUN_MAN_MON")
+    field(DOL,  "$(P)_RUN_STATE_MON")
     field(OMSL, "closed_loop")
 }
 
@@ -43,7 +47,7 @@ record(bo, "$(P)_DUMMY_ACTION") {
 record(calcout, "$(P)_PV1_CHECK") {
     field(DESC, "Check if DISP changed from outside")
     field(INPA, "$(PV1=$(P)_DUMMY_ACTION).DISP CP")
-    field(INPB, "$(P)_RUN_MAN_MON")
+    field(INPB, "$(P)_RUN_STATE_MON")
     field(CALC, "A # B && B # 0") # Enforce lock only (let otside lock when this does not lock)
     field(OOPT, "When Non-zero")
     field(OUT, "$(PV1=$(P)_DUMMY_ACTION).DISP")
@@ -52,7 +56,7 @@ record(calcout, "$(P)_PV1_CHECK") {
 record(calcout, "$(P)_PV2_CHECK") {
     field(DESC, "Check if DISP changed from outside")
     field(INPA, "$(PV2=$(P)_DUMMY_ACTION).DISP CP")
-    field(INPB, "$(P)_RUN_MAN_MON")
+    field(INPB, "$(P)_RUN_STATE_MON")
     field(CALC, "A # B && B # 0") # Enforce lock only (let otside lock when this does not lock)
     field(OOPT, "When Non-zero")
     field(OUT, "$(PV2=$(P)_DUMMY_ACTION).DISP")
@@ -61,7 +65,7 @@ record(calcout, "$(P)_PV2_CHECK") {
 record(calcout, "$(P)_PV3_CHECK") {
     field(DESC, "Check if DISP changed from outside")
     field(INPA, "$(PV3=$(P)_DUMMY_ACTION).DISP CP")
-    field(INPB, "$(P)_RUN_MAN_MON")
+    field(INPB, "$(P)_RUN_STATE_MON")
     field(CALC, "A # B && B # 0") # Enforce lock only (let otside lock when this does not lock)
     field(OOPT, "When Non-zero")
     field(OUT, "$(PV3=$(P)_DUMMY_ACTION).DISP")
@@ -70,7 +74,7 @@ record(calcout, "$(P)_PV3_CHECK") {
 record(calcout, "$(P)_PV4_CHECK") {
     field(DESC, "Check if DISP changed from outside")
     field(INPA, "$(PV4=$(P)_DUMMY_ACTION).DISP CP")
-    field(INPB, "$(P)_RUN_MAN_MON")
+    field(INPB, "$(P)_RUN_STATE_MON")
     field(CALC, "A # B && B # 0") # Enforce lock only (let otside lock when this does not lock)
     field(OOPT, "When Non-zero")
     field(OUT, "$(PV4=$(P)_DUMMY_ACTION).DISP")
@@ -79,7 +83,7 @@ record(calcout, "$(P)_PV4_CHECK") {
 record(calcout, "$(P)_PV5_CHECK") {
     field(DESC, "Check if DISP changed from outside")
     field(INPA, "$(PV5=$(P)_DUMMY_ACTION).DISP CP")
-    field(INPB, "$(P)_RUN_MAN_MON")
+    field(INPB, "$(P)_RUN_STATE_MON")
     field(CALC, "A # B && B # 0") # Enforce lock only (let otside lock when this does not lock)
     field(OOPT, "When Non-zero")
     field(OUT, "$(PV5=$(P)_DUMMY_ACTION).DISP")
@@ -88,7 +92,7 @@ record(calcout, "$(P)_PV5_CHECK") {
 record(calcout, "$(P)_PV6_CHECK") {
     field(DESC, "Check if DISP changed from outside")
     field(INPA, "$(PV6=$(P)_DUMMY_ACTION).DISP CP")
-    field(INPB, "$(P)_RUN_MAN_MON")
+    field(INPB, "$(P)_RUN_STATE_MON")
     field(CALC, "A # B && B # 0") # Enforce lock only (let otside lock when this does not lock)
     field(OOPT, "When Non-zero")
     field(OUT, "$(PV6=$(P)_DUMMY_ACTION).DISP")
@@ -97,7 +101,7 @@ record(calcout, "$(P)_PV6_CHECK") {
 record(calcout, "$(P)_PV7_CHECK") {
     field(DESC, "Check if DISP changed from outside")
     field(INPA, "$(PV7=$(P)_DUMMY_ACTION).DISP CP")
-    field(INPB, "$(P)_RUN_MAN_MON")
+    field(INPB, "$(P)_RUN_STATE_MON")
     field(CALC, "A # B && B # 0") # Enforce lock only (let otside lock when this does not lock)
     field(OOPT, "When Non-zero")
     field(OUT, "$(PV7=$(P)_DUMMY_ACTION).DISP")
@@ -106,7 +110,7 @@ record(calcout, "$(P)_PV7_CHECK") {
 record(calcout, "$(P)_PV8_CHECK") {
     field(DESC, "Check if DISP changed from outside")
     field(INPA, "$(PV8=$(P)_DUMMY_ACTION).DISP CP")
-    field(INPB, "$(P)_RUN_MAN_MON")
+    field(INPB, "$(P)_RUN_STATE_MON")
     field(CALC, "A # B && B # 0") # Enforce lock only (let otside lock when this does not lock)
     field(OOPT, "When Non-zero")
     field(OUT, "$(PV8=$(P)_DUMMY_ACTION).DISP")
