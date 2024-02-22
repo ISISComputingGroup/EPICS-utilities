@@ -2,7 +2,7 @@
 # via their .DISP field to disable db puts when an experiment is running i.e. dae is not in setup state
 # 
 # Example usage in a st-common.cmd:
-# dbLoadRecords("$(UTILITIES)/db/disable_pv_puts.db", "INST=$(MYPVPREFIX),P=$(MYPVPREFIX)$(IOCNAME):,PV1=$(MYPVPREFIX)$(IOCNAME):<pv to be locked>,PV2=...,PV3=...PV8=...")
+# dbLoadRecords("<UTILITIES macro>/db/disable_pv_puts.db", "INST=<MYPVPREFIX macro>,P=<MYPVPREFIX macro><IOCNAME macro>:,PV1=<MYPVPREFIX macro><IOCNAME macro>:<pv to be locked>,PV2=...,PV3=...PV8=...")
 #
 # Note! This enforces the lock ( you can't change PVs DISP from 1 to 0 from outside)
 #
