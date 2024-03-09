@@ -9,6 +9,7 @@ SNCSEQ=$(SUPPORT)/seq/master
 ASUBFUNCTIONS=$(SUPPORT)/asubFunctions/master
 BOOST=$(EPICS_ROOT)/libraries/master/boost
 GTEST=$(SUPPORT)/googletest/master
+ASYN=$(SUPPORT)/asyn/master
 
 # END OF AUTO GENERATED DEPENDENCIES
 

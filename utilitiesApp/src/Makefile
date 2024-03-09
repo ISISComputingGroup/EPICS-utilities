@@ -8,9 +8,9 @@ include $(TOP)/configure/CONFIG
 #==================================================
 # build a support library
 
-USR_INCLUDES += -I"$(TOP)/../../../libraries/master/boost/include"
+USR_INCLUDES += -I"$(TOP)/../../../libraries/master/boost/include" -I"$(TOP)/../../../libraries/master/jsonformoderncpp"
 
-LIBRARY_IOC += utilities
+LIBRARY_IOC += utilities utilities_asyn
 
 PROD_IOC += uzhex zhex jcaput
 PROD_IOC_WIN32 += setprocessaffinity
@@ -18,21 +18,23 @@ PROD_IOC_WIN32 += setprocessaffinity
 # xxxRecord.h will be created from xxxRecord.dbd
 #DBDINC += xxxRecord
 # install icpconfig.dbd into <top>/dbd
-DBD += utilities.dbd
+DBD += utilities.dbd utilities_asyn.dbd
 
 INC += utilities.h win32_dirent.h ibexSeqPVmacros.h
 
 # specify all source files to be compiled and added to the library
 utilities_SRCS += iocname.cpp trimString.cpp ioccalc.cpp iocdcalc.cpp compress.cpp mkdir.cpp iocstringtest.cpp iocshHelpers.cpp
 utilities_SRCS += FileList.cpp json.cpp dbLoadRecordsFuncs.cpp iocshCmdFuncs.cpp freeIPPort.cpp msgBox.cpp
-utilities_SRCS_WIN32 += win32_dirent.c getProcessUptime.cpp putDbAndWait.cpp
-
 utilities_SRCS += find_calibration_range.c find_calibration_range_impl.cpp find_calibration_range_utils.cpp
-
+utilities_SRCS_WIN32 += win32_dirent.c getProcessUptime.cpp putDbAndWait.cpp 
 utilities_LIBS += zlib pcrecpp pcre libjson
 utilities_LIBS += $(EPICS_BASE_IOC_LIBS)
-
 utilities_SYS_LIBS_WIN32 += ws2_32 user32
+
+utilities_asyn_SRCS += asynInterposeSecop.cpp
+utilities_asyn_LIBS += asyn zlib pcrecpp pcre
+utilities_asyn_LIBS += $(EPICS_BASE_IOC_LIBS)
+utilities_asyn_SYS_LIBS_WIN32 += ws2_32 user32
 
 uzhex_SRCS += uzhex.cpp
 uzhex_LIBS += utilities zlib pcre libjson
