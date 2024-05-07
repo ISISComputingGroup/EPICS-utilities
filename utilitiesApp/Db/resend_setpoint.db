@@ -1,0 +1,85 @@
+## resend a setpoint if not within tolerance
+## macros needed
+##   SP - setpoint PV
+##   SPRBV - setpoint readback PV
+##   NRETRY - number of retries to do
+##   CHKTOL - tolerance to use in check
+##   CHKTYPE - how to interpret CHKTOL: "Percent" or "Value"
+##
+## To enable retries forward link to $(SP):CHK
+
+
+
+## difference between sent SP and readback SP to trigger a resend of SP
+## this can be a number or % depending on CHK:TYPE
+record(ai, "$(SP):CHK:TOL") {
+    field(DESC, "Setpoint check tolerance")
+    field(VAL, "$(CHKTOL=10)")
+}
+
+## Whether CHK:TOL is a value or a % difference 
+record(bi, "$(SP):CHK:TYPE") {
+    field(DESC, "Setpoint check type")
+    field(ZNAM, "Percent")
+    field(ONAM, "Value")
+    field(VAL, "$(CHKTYPE=0)")
+}
+
+## current setpoint retry number
+record(longout, "$(SP):RCNT") {
+    field(DESC, "Setpoint retry count")
+    field(VAL, "0")
+    field(PINI, "YES")
+    field(HIGH, "$(NRETRY=5)")
+    field(HSV, "MINOR")
+    info(archive, "VAL")
+}
+
+## last setpoint, used to see whether to reset retry count
+record(ai, "$(SP):LAST") {
+    field(DESC, "Last setpoint")
+    field(INP, "$(SP)")
+    field(PINI, "YES")
+    field(FLNK, "$(SP):CHKSP")
+}
+
+## rset retry count if new SP
+record(calcout, "$(SP):CHK") {
+    field(INPA, "$(SP)")
+    field(INPB, "$(SP):LAST")
+    field(CALC, "A!=B")
+    field(OOPT, "When Non-zero")
+    field(DOPT, "Use OCAL")
+    field(OCAL, "0")
+    field(OUT, "$(SP):RCNT PP")
+    field(FLNK, "$(SP):LAST")
+}
+
+## check difference between sent and readback SP and re-issue send if necessary
+## request resend setpoint after a 1 second delay
+record(calcout, "$(SP):CHKSP") {
+    field(DESC, "Check SP received or resend")
+    field(INPA, "$(SP)")
+    field(INPB, "$(SPRBV)")
+    field(INPC, "$(SP):CHK:TOL")
+    field(INPD, "$(SP):CHK:TYPE")
+    field(INPE, "$(NRETRY=5)")
+    field(INPF, "$(SP):RCNT")
+    field(CALC, "G:=ABS(A-B);(F<E)&&((D==0&&(G>A*C/100.0))||(D==1&&G>C))?1:0")
+    field(OOPT, "When Non-zero")
+    field(OUT, "$(SP):RETRY.PROC PP")
+    field(HIGH, "0.5")
+    field(HSV, "MINOR")
+    field(ODLY, 1)
+    info(archive, "VAL")
+}
+
+record(calcout, "$(SP):RETRY") {
+    field(INPA, "$(SP):RCNT")
+    field(CALC, "A+1")
+    field(OOPT, "Every Time")
+    field(OUT, "$(SP):RCNT PP")
+    # we need to use CA on OUT as otherwise SP will not reprocess
+    #as we are currently part of its existing processing chain
+    field(FLNK, "$(SP).PROC CA")
+}
