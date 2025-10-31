@@ -41,7 +41,6 @@
 #include "envDefs.h"
 #include "macLib.h"
 #include "errlog.h"
-#include "pcrecpp.h"
 
 #include <string.h>
 #include <regex>
@@ -275,7 +274,7 @@ epicsShareFunc void dbAliasRecordsRE(const char* recordMatch, const char* aliasS
     if (!*aliasSub || !*recordMatch) {
         return;
     }
-    pcrecpp::RE re(recordMatch);
+    const std::regex re(recordMatch);
     std::string s;
     DBENTRY dbentry;
     DBENTRY *pdbentry=&dbentry;
@@ -293,7 +292,8 @@ epicsShareFunc void dbAliasRecordsRE(const char* recordMatch, const char* aliasS
         status = dbFirstRecord(pdbentry);
         while (!status) {
             s = dbGetRecordName(pdbentry);
-            if ( re.FullMatch(s) && re.Replace(aliasSub, &s) ) {
+            if ( std::regex_match(s, re) ) {
+                s = std::regex_replace(s, re, aliasSub);
                 if (dbCreateAlias(pdbentry, s.c_str())) {
                     epicsPrintf("dbAliasRecordsRE: Can't create alias %s -> %s\n", s.c_str(), dbGetRecordName(pdbentry));
                 } else {
