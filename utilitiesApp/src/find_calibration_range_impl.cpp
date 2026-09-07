@@ -70,8 +70,19 @@ long find_calibration_range_impl(aSubRecord *prec) {
             return 1;
         }
 
-        //  Get highest and lowest values in the first column of the calibration file
-        double low_limit = std::stod(lines[0][0]);
+        // Get highest and lowest values in the first column of the calibration file
+        // skip over lines which start with '#' as they are the header.
+        int first_value = 0;
+        for (auto& line : lines) {
+            if (line[0].rfind("#", 0) == 0) {
+                first_value++;
+            }
+            else {
+                break;
+            }
+        }
+
+        double low_limit = std::stod(lines[first_value][0]);
         double high_limit = std::stod(lines[lines.size() - 1][0]);
 
         // Check the types of output values
